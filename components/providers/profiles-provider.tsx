@@ -82,6 +82,50 @@ function sortProfiles(nextProfiles: StoredProfile[]) {
   );
 }
 
+function safeLocalStorageGet(key: string) {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeLocalStorageSet(key: string, value: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage permission failures to keep the app usable.
+  }
+}
+
+function safeLocalStorageRemove(key: string) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // Ignore storage permission failures to keep the app usable.
+  }
+}
+
+function createClientProfileId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  return `profile-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export function ProfilesProvider({ children }: { children: React.ReactNode }) {
   const { data: session, status: sessionStatus } = useSession();
   const [profiles, setProfiles] = React.useState<StoredProfile[]>([]);
@@ -126,10 +170,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const fromStorage =
-        typeof window !== "undefined"
-          ? window.localStorage.getItem(ACTIVE_PROFILE_STORAGE_KEY)
-          : null;
+      const fromStorage = safeLocalStorageGet(ACTIVE_PROFILE_STORAGE_KEY);
 
       setCurrentProfileIdState((current) => {
         const preserved =
@@ -145,9 +186,22 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
   );
 
   const refreshProfiles = React.useCallback(async () => {
-    const nextProfiles = (await listProfiles()).map((profile) => normalizeStoredProfile(profile));
-    commitProfiles(nextProfiles);
-    setHydrated(true);
+    try {
+      const nextProfiles = (await listProfiles()).map((profile) =>
+        normalizeStoredProfile(profile),
+      );
+      commitProfiles(nextProfiles);
+      setSyncError(null);
+    } catch (error) {
+      commitProfiles([]);
+      setSyncError(
+        error instanceof Error
+          ? error.message
+          : "Локальное хранилище временно недоступно в этом браузере.",
+      );
+    } finally {
+      setHydrated(true);
+    }
   }, [commitProfiles]);
 
   React.useEffect(() => {
@@ -163,11 +217,11 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!currentProfileId) {
-      window.localStorage.removeItem(ACTIVE_PROFILE_STORAGE_KEY);
+      safeLocalStorageRemove(ACTIVE_PROFILE_STORAGE_KEY);
       return;
     }
 
-    window.localStorage.setItem(ACTIVE_PROFILE_STORAGE_KEY, currentProfileId);
+    safeLocalStorageSet(ACTIVE_PROFILE_STORAGE_KEY, currentProfileId);
   }, [currentProfileId]);
 
   const persistProfile = React.useCallback(
@@ -384,7 +438,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       contexts: ProfileContext[];
     }) => {
       const baseProfile = createEmptyProfile({
-        id: crypto.randomUUID(),
+        id: createClientProfileId(),
         displayName: input.displayName.trim(),
         about: input.about.trim(),
         contexts: input.contexts,
@@ -503,7 +557,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
         (profile) => profile.profileMeta.id === parsed.profileMeta.id,
       );
 
-      const importedId = idExists ? crypto.randomUUID() : parsed.profileMeta.id;
+      const importedId = idExists ? createClientProfileId() : parsed.profileMeta.id;
       let nextProfile = recalculateProfile({
         ...parsed,
         profileMeta: {
