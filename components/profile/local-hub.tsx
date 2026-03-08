@@ -64,6 +64,7 @@ export function LocalHub() {
     profiles,
     currentProfile,
     importProfileFromObject,
+    loadDemoProfiles,
     hydrated,
     authStatus,
     account,
@@ -115,6 +116,17 @@ export function LocalHub() {
       setMessage("");
     } finally {
       event.target.value = "";
+    }
+  }
+
+  async function handleLoadDemoProfiles() {
+    try {
+      const seeded = await loadDemoProfiles();
+      setMessage(`Загружены демо-профили: ${seeded.map((profile) => profile.profileMeta.displayName).join(", ")}`);
+      setError("");
+    } catch (seedError) {
+      setError(seedError instanceof Error ? seedError.message : "Не удалось загрузить демо-профили.");
+      setMessage("");
     }
   }
 
@@ -239,6 +251,9 @@ export function LocalHub() {
                   {focusProfile ? "Продолжить тест" : "Создать профиль"}
                   <ArrowRight className="size-4" />
                 </Link>
+              </Button>
+              <Button variant="outline" className="rounded-full px-5" onClick={() => void handleLoadDemoProfiles()}>
+                Загрузить демо-профили
               </Button>
               <Button asChild variant="outline" className="rounded-full px-5">
                 <Link href="/compare">Открыть сравнение</Link>

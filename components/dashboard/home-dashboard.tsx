@@ -26,7 +26,9 @@ const FALLBACK_RADAR = [
 ];
 
 export function HomeDashboard() {
-  const { profiles, currentProfile, account } = useProfiles();
+  const { profiles, currentProfile, account, loadDemoProfiles } = useProfiles();
+  const [demoMessage, setDemoMessage] = React.useState<string | null>(null);
+  const [demoLoading, setDemoLoading] = React.useState(false);
 
   const focusProfile = currentProfile ?? profiles[0] ?? null;
   const displayName =
@@ -156,6 +158,26 @@ export function HomeDashboard() {
     };
   }, [focusProfile]);
 
+  async function handleLoadDemoProfiles() {
+    try {
+      setDemoLoading(true);
+      const seeded = await loadDemoProfiles();
+      setDemoMessage(
+        `Демо-профили загружены: ${seeded
+          .map((profile) => profile.profileMeta.displayName)
+          .join(", ")}`,
+      );
+    } catch (error) {
+      setDemoMessage(
+        error instanceof Error
+          ? error.message
+          : "Не удалось загрузить демо-профили.",
+      );
+    } finally {
+      setDemoLoading(false);
+    }
+  }
+
   return (
     <DashboardShell
       currentProfileId={focusProfile?.profileMeta.id ?? null}
@@ -167,7 +189,14 @@ export function HomeDashboard() {
           <HeroBanner
             displayName={displayName}
             continueHref={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/tests` : "/profiles/new"}
+            onLoadDemoProfiles={() => void handleLoadDemoProfiles()}
+            loadingDemoProfiles={demoLoading}
           />
+          {demoMessage ? (
+            <div className="dashboard-card rounded-[1.8rem] px-5 py-4 text-sm text-white/80">
+              {demoMessage}
+            </div>
+          ) : null}
           <ProfileRadarWidget
             title="Мой профиль"
             radarData={radarData}

@@ -4,6 +4,7 @@ import * as React from "react";
 import { useSession } from "next-auth/react";
 
 import { validateProfileExport } from "@/lib/export/profile-schema";
+import { createDemoProfiles } from "@/lib/demo/profiles";
 import {
   createEmptyProfile,
   recalculateProfile,
@@ -68,6 +69,7 @@ interface ProfilesContextValue {
   ) => Promise<StoredProfile | null>;
   setCurrentProfileId: (profileId: string | null) => void;
   importProfileFromObject: (payload: unknown) => Promise<StoredProfile>;
+  loadDemoProfiles: () => Promise<StoredProfile[]>;
   refreshProfiles: () => Promise<void>;
   syncSelectedProfiles: (profileIds: string[]) => Promise<void>;
   syncAllProfiles: () => Promise<void>;
@@ -584,6 +586,38 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
     [account, persistProfile],
   );
 
+  const loadDemoProfiles = React.useCallback(async () => {
+    const demoProfiles = createDemoProfiles();
+    const persistedProfiles: StoredProfile[] = [];
+
+    for (const demoProfile of demoProfiles) {
+      const existing = profilesRef.current.find(
+        (profile) => profile.profileMeta.id === demoProfile.profileMeta.id,
+      );
+
+      let nextProfile: StoredProfile = existing
+        ? {
+            ...demoProfile,
+            syncMeta: existing.syncMeta,
+          }
+        : demoProfile;
+
+      nextProfile = account
+        ? markProfilePendingSync(nextProfile, account.id)
+        : markProfileLocalOnly(nextProfile);
+
+      persistedProfiles.push(
+        await persistProfile(nextProfile, { scheduleSync: Boolean(account) }),
+      );
+    }
+
+    if (persistedProfiles[0]) {
+      setCurrentProfileIdState(persistedProfiles[0].profileMeta.id);
+    }
+
+    return persistedProfiles;
+  }, [account, persistProfile]);
+
   const setCurrentProfileId = React.useCallback((profileId: string | null) => {
     setCurrentProfileIdState(profileId);
   }, []);
@@ -655,6 +689,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       setLastVisitedPage,
       setCurrentProfileId,
       importProfileFromObject,
+      loadDemoProfiles,
       refreshProfiles,
       syncSelectedProfiles,
       syncAllProfiles,
@@ -676,6 +711,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       setLastVisitedPage,
       setCurrentProfileId,
       importProfileFromObject,
+      loadDemoProfiles,
       refreshProfiles,
       syncSelectedProfiles,
       syncAllProfiles,
