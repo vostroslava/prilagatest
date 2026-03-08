@@ -32,7 +32,7 @@ function ActionButton({ icon: Icon, label }: { icon: LucideIcon; label: string }
     <button
       type="button"
       aria-label={label}
-      className="dashboard-shell-button flex size-11 items-center justify-center rounded-full"
+      className="dashboard-shell-button flex size-10 items-center justify-center rounded-full"
     >
       <Icon className="size-4" />
     </button>
@@ -60,7 +60,7 @@ export function DashboardTopNav({
           <p className="font-display text-[0.92rem] uppercase tracking-[0.42em] text-foreground">
             Analytical Zen
           </p>
-          <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-white/45">
+          <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-white/42">
             Профиль · Тесты · Самопонимание
           </p>
         </div>
@@ -74,7 +74,7 @@ export function DashboardTopNav({
               key={item.key}
               href={buildHref(item.key, currentProfileId)}
               className={cn(
-                "dashboard-shell-button rounded-full px-5 text-[13px] font-medium text-white/70",
+                "dashboard-shell-button flex h-10 items-center rounded-full px-5 text-[13px] font-medium text-white/72",
                 active && "dashboard-shell-button-active text-white",
               )}
             >
@@ -95,7 +95,7 @@ export function DashboardTopNav({
 
         <button
           type="button"
-          className="dashboard-shell-button flex h-11 min-w-[9rem] items-center justify-between rounded-full pl-2 pr-3"
+          className="dashboard-shell-button flex h-10 min-w-[9rem] items-center justify-between rounded-full pl-2 pr-3"
         >
           <div className="flex items-center gap-3">
             <div className="size-8 rounded-full bg-[radial-gradient(circle_at_30%_30%,#ffe9d2,#9d6544_58%,#3a2319)] ring-1 ring-white/12" />

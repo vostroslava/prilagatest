@@ -43,7 +43,7 @@ export function RecentComparisons({ items }: RecentComparisonsProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-1 text-[11px] uppercase tracking-[0.16em] text-white/32">
+            <div className="flex items-center gap-1 text-[11px] uppercase tracking-[0.22em] text-white/38">
               <span>{item.dateLabel}</span>
               <ChevronRight className="size-3.5" />
             </div>

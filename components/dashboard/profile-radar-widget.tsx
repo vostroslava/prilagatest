@@ -56,7 +56,7 @@ export function ProfileRadarWidget({
             data={radarData}
             height={312}
             className="border-none bg-transparent shadow-none"
-            primaryStroke="#62f2e2"
+            primaryStroke="#00E5FF"
             showLabels
           />
 
