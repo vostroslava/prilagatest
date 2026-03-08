@@ -37,18 +37,27 @@ export function ProfileSwitcher() {
         value={currentProfileId ?? undefined}
         onValueChange={(value) => setCurrentProfileId(String(value))}
       >
-        <SelectTrigger className="min-w-[208px] rounded-full px-3.5 text-sm shadow-none">
+        <SelectTrigger className="dashboard-card-soft min-w-[220px] rounded-full border border-white/10 bg-white/5 px-3.5 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
           <span className="truncate">
             {currentProfile?.profileMeta.displayName ?? "Выберите профиль"}
           </span>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="dashboard-card rounded-[1.5rem] border border-white/10 bg-[rgba(8,14,22,0.96)] p-2 backdrop-blur-xl">
           {profiles.map((profile) => (
             <SelectItem key={profile.profileMeta.id} value={profile.profileMeta.id}>
-              <div className="flex flex-col">
-                <span>{profile.profileMeta.displayName}</span>
-                <span className="text-xs text-muted-foreground">
+              <div className="flex min-w-0 items-center gap-3">
+                <span
+                  className={`size-2 rounded-full ${
+                    profile.profileMeta.id === currentProfileId
+                      ? "bg-cyan-300 shadow-[0_0_10px_rgba(45,211,191,0.85)]"
+                      : "bg-white/20"
+                  }`}
+                />
+                <span className="flex min-w-0 flex-col">
+                  <span className="truncate">{profile.profileMeta.displayName}</span>
+                  <span className="text-xs text-muted-foreground">
                   Обновлён {formatDate(profile.profileMeta.updatedAt)}
+                  </span>
                 </span>
               </div>
             </SelectItem>

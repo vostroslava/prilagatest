@@ -30,10 +30,10 @@ export function LikertScale({ value, onChange, disabled = false }: LikertScalePr
               disabled={disabled}
               onClick={() => onChange(option.value)}
               className={cn(
-                "group relative flex min-h-[4.35rem] w-full items-center justify-center overflow-hidden rounded-[1.45rem] border px-6 py-4 text-center outline-none transition-all duration-200 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-[4.65rem]",
+                "group dashboard-card-soft relative flex min-h-[4.65rem] w-full items-center justify-center overflow-hidden rounded-[1.65rem] border px-6 py-4 text-center outline-none transition-all duration-200 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-[4.95rem]",
                 active
-                  ? "border-primary/40 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--primary)_14%,transparent),color-mix(in_srgb,var(--primary)_20%,transparent),color-mix(in_srgb,var(--primary)_30%,transparent))] text-foreground ring-1 ring-primary/35 shadow-[0_16px_34px_var(--surface-glow)]"
-                  : "border-[color:var(--surface-border)] bg-[var(--surface-control)] text-foreground/90 hover:-translate-y-0.5 hover:border-[color:var(--surface-border-strong)] hover:bg-[var(--surface-control-hover)] hover:text-foreground"
+                  ? "border-cyan-300/35 bg-[linear-gradient(90deg,rgba(45,211,191,0.18),rgba(255,255,255,0.03),rgba(45,211,191,0.24))] text-foreground ring-1 ring-cyan-300/25 shadow-[0_16px_34px_rgba(45,211,191,0.14)]"
+                  : "border-white/10 bg-white/5 text-foreground/92 hover:-translate-y-0.5 hover:border-cyan-300/18 hover:bg-white/[0.06] hover:text-foreground"
               )}
             >
               <div className="absolute inset-y-0 left-0 w-24 bg-[radial-gradient(circle_at_left,rgba(89,241,213,0.14),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-aria-pressed:opacity-100" />

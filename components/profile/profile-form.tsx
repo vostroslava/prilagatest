@@ -65,9 +65,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.12fr_0.88fr]">
-      <Card className="dashboard-card-strong rounded-[2.4rem] border-[color:var(--surface-border)]">
-        <CardHeader className="space-y-5">
+    <div className="mx-auto grid max-w-[1280px] gap-6 xl:grid-cols-[1.06fr_0.82fr]">
+      <Card className="dashboard-card-strong rounded-[2.6rem] border-[color:var(--dashboard-border)]">
+        <CardHeader className="space-y-6 px-6 pt-6 sm:px-7 sm:pt-7">
           <div className="flex flex-wrap gap-2">
             <Badge className="status-chip shadow-none">
               {profile ? "Edit profile" : "Create profile"}
@@ -77,7 +77,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             </Badge>
           </div>
           <div className="space-y-4">
-            <CardTitle className="font-display text-5xl leading-[0.98] tracking-tight text-foreground">
+            <CardTitle className="font-display text-4xl leading-[1.02] tracking-tight text-foreground sm:text-5xl">
               {profile ? "Обновить локальный профиль" : "Создать новый живой профиль"}
             </CardTitle>
             <CardDescription className="max-w-3xl text-base leading-8">
@@ -86,7 +86,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-6 pb-6 sm:px-7 sm:pb-7">
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr]">
               <div className="space-y-6">
@@ -102,7 +102,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                     value={displayName}
                     onChange={(event) => setDisplayName(event.target.value)}
                     placeholder="Например, Алина"
-                    className="h-13 rounded-[1.4rem] text-base"
+                    className="dashboard-field h-14 rounded-[1.6rem] text-base"
                     required
                   />
                 </div>
@@ -120,17 +120,17 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                           key={option.key}
                           type="button"
                           className={cn(
-                            "quiet-panel rounded-[1.5rem] border px-4 py-4 text-left transition-all duration-300",
+                            "dashboard-card-soft elevated-hover rounded-[1.65rem] border px-4 py-4 text-left transition-all duration-300",
                             active
-                              ? "border-primary/35 bg-[var(--surface-control-active)] shadow-[0_0_24px_var(--surface-glow)]"
-                              : "hover:border-[color:var(--surface-border-strong)]",
+                              ? "border-cyan-300/35 bg-[linear-gradient(180deg,rgba(45,211,191,0.16),rgba(255,255,255,0.03))] shadow-[0_0_24px_rgba(45,211,191,0.14)]"
+                              : "border-white/10 bg-white/5 hover:border-cyan-300/18",
                           )}
                           onClick={() => toggleContext(option.key)}
                         >
                           <div className="flex items-center justify-between gap-3">
                             <span className="text-sm font-medium text-foreground">{option.label}</span>
                             {active ? (
-                              <Badge className="status-chip px-3 shadow-none">
+                              <Badge className="status-chip border-cyan-300/20 bg-cyan-400/10 px-3 text-cyan-100 shadow-none">
                                 active
                               </Badge>
                             ) : null}
@@ -157,7 +157,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                   value={about}
                   onChange={(event) => setAbout(event.target.value)}
                   placeholder="Например: “Собираю профиль для личного понимания и будущего сравнения в отношениях”."
-                  className="min-h-[340px] rounded-[1.8rem] text-base"
+                  className="dashboard-field min-h-[340px] rounded-[1.9rem] text-base"
                 />
               </div>
             </div>
@@ -166,7 +166,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               <Button
                 type="submit"
                 size="lg"
-                className="rounded-full px-6"
+                className="dashboard-primary-button rounded-full px-6 text-white"
                 disabled={isSaving || !displayName.trim()}
               >
                 {profile ? "Сохранить и продолжить" : "Создать профиль и перейти к тестам"}
@@ -180,9 +180,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="dashboard-card rounded-[2.4rem] border-[color:var(--surface-border)]">
-        <CardHeader>
-          <CardTitle className="font-display text-3xl tracking-tight">
+      <Card className="dashboard-card rounded-[2.6rem] border-[color:var(--dashboard-border)]">
+        <CardHeader className="px-6 pt-6 sm:px-7 sm:pt-7">
+          <CardTitle className="font-display text-3xl tracking-tight text-foreground">
             Что сохранится в пакете профиля
           </CardTitle>
           <CardDescription>
@@ -190,7 +190,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             пакет для дальнейшей ручной работы.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-6 pb-6 sm:px-7 sm:pb-7">
           {[
             "Основные метаданные профиля и выбранные контексты.",
             "Все ответы по Big Five, IPIP-IPC и внутреннему конфликтному модулю.",
@@ -200,7 +200,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           ].map((item, index) => (
             <div
               key={item}
-              className="quiet-panel rounded-[1.5rem] p-4 text-sm leading-7 text-muted-foreground"
+              className="dashboard-card-soft rounded-[1.55rem] border border-white/10 bg-white/5 p-4 text-sm leading-7 text-muted-foreground"
             >
               <span className="mr-3 font-semibold text-foreground/85">{index + 1}.</span>
               {item}

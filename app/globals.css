@@ -577,4 +577,27 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
   }
+
+  .dashboard-field {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.022)),
+      linear-gradient(180deg, rgba(45, 211, 191, 0.03), transparent 72%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 8px 18px rgba(0, 0, 0, 0.1);
+    color: var(--foreground);
+  }
+
+  .dashboard-field::placeholder {
+    color: color-mix(in srgb, var(--muted-foreground) 86%, transparent);
+  }
+
+  .dashboard-field:focus-visible {
+    border-color: rgba(45, 211, 191, 0.45);
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px rgba(45, 211, 191, 0.18),
+      0 0 22px rgba(45, 211, 191, 0.12);
+  }
 }
