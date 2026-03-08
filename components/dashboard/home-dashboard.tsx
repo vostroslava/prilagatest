@@ -2,9 +2,14 @@
 
 import * as React from "react";
 
+import {
+  DASHBOARD_TEST_BLOCK_PRESETS,
+} from "@/components/dashboard/config";
 import { HeroBanner } from "@/components/dashboard/hero-banner";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { TestBlocks } from "@/components/dashboard/test-blocks";
 import { useProfiles } from "@/components/providers/profiles-provider";
+import { TEST_BLOCKS } from "@/content/tests";
 
 export function HomeDashboard() {
   const { profiles, currentProfile, account } = useProfiles();
@@ -30,6 +35,22 @@ export function HomeDashboard() {
     return total ? Math.round((answered / total) * 100) : 32;
   }, [focusProfile]);
 
+  const testBlockItems = React.useMemo(
+    () =>
+      DASHBOARD_TEST_BLOCK_PRESETS.map((preset) => {
+        const blockConfig = TEST_BLOCKS.find((block) => block.id === preset.id);
+        const progress = focusProfile?.assessmentProgress[preset.id as keyof typeof focusProfile.assessmentProgress];
+
+        return {
+          ...preset,
+          subtitle: blockConfig ? `${blockConfig.questions.length} вопросов` : preset.subtitle,
+          progress: progress ? Math.round(progress.completionRatio * 100) : preset.fallbackProgress,
+          href: focusProfile ? `/profiles/${focusProfile.profileMeta.id}/tests` : "/profiles/new",
+        };
+      }),
+    [focusProfile],
+  );
+
   return (
     <DashboardShell
       currentProfileId={focusProfile?.profileMeta.id ?? null}
@@ -51,9 +72,7 @@ export function HomeDashboard() {
         </div>
 
         <div className="space-y-6">
-          <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
-            Test blocks slot
-          </div>
+          <TestBlocks items={testBlockItems} />
           <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
             Quick actions slot
           </div>
