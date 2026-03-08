@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  PolarAngleAxis,
   PolarGrid,
   Radar,
   RadarChart,
@@ -68,6 +67,25 @@ function RadarTooltip({
   );
 }
 
+function buildLabelPositions(data: RadarPoint[]) {
+  if (!data.length) {
+    return [];
+  }
+
+  return data.map((point, index) => {
+    const angle = ((index * 360) / data.length - 90) * (Math.PI / 180);
+    const radius = 40;
+    const x = 50 + Math.cos(angle) * radius;
+    const y = 50 + Math.sin(angle) * radius;
+
+    return {
+      label: point.label,
+      x,
+      y,
+    };
+  });
+}
+
 export function ProfileRadar({
   data,
   height = 360,
@@ -83,6 +101,7 @@ export function ProfileRadar({
   const token = React.useId().replaceAll(":", "");
   const [isMounted, setIsMounted] = React.useState(false);
   const hasSecondary = data.some((point) => typeof point.secondaryValue === "number");
+  const labelPositions = React.useMemo(() => buildLabelPositions(data), [data]);
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -122,14 +141,6 @@ export function ProfileRadar({
               </defs>
 
               <PolarGrid stroke="var(--radar-grid)" radialLines={false} />
-              <PolarAngleAxis
-                dataKey="label"
-                tick={
-                  showLabels
-                    ? { fill: "var(--radar-label)", fontSize: 12 }
-                    : false
-                }
-              />
 
               {hasSecondary ? (
                 <Radar
@@ -174,6 +185,23 @@ export function ProfileRadar({
           </div>
         )}
       </div>
+
+      {showLabels ? (
+        <div className="pointer-events-none absolute inset-0">
+          {labelPositions.map((point) => (
+            <div
+              key={point.label}
+              className="absolute max-w-[7rem] -translate-x-1/2 -translate-y-1/2 px-2 text-center text-[11px] font-medium leading-4 text-[color:var(--radar-label)] sm:text-xs"
+              style={{
+                left: `${point.x}%`,
+                top: `${point.y}%`,
+              }}
+            >
+              {point.label}
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       {centerLabel || centerValue ? (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
