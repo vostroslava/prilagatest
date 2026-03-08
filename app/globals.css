@@ -82,10 +82,16 @@
   --radar-tooltip: rgba(255, 255, 255, 0.94);
   --shell-highlight: rgba(45, 211, 191, 0.14);
   --shell-line: rgba(45, 211, 191, 0.22);
+  --dashboard-surface: rgba(245, 249, 252, 0.9);
+  --dashboard-surface-strong: rgba(255, 255, 255, 0.96);
+  --dashboard-border: rgba(15, 23, 42, 0.1);
+  --dashboard-border-strong: rgba(15, 23, 42, 0.16);
+  --dashboard-glow: rgba(45, 211, 191, 0.08);
+  --dashboard-track: rgba(15, 23, 42, 0.12);
 }
 
 .dark {
-  --background: oklch(0.125 0.01 255);
+  --background: oklch(0.12 0.01 255);
   --foreground: oklch(0.965 0.006 255);
   --card: oklch(0.18 0.008 255);
   --card-foreground: oklch(0.965 0.006 255);
@@ -132,6 +138,12 @@
   --radar-tooltip: rgba(10, 17, 22, 0.92);
   --shell-highlight: rgba(91, 241, 213, 0.16);
   --shell-line: rgba(91, 241, 213, 0.24);
+  --dashboard-surface: rgba(10, 16, 25, 0.7);
+  --dashboard-surface-strong: rgba(8, 14, 22, 0.88);
+  --dashboard-border: rgba(45, 211, 191, 0.15);
+  --dashboard-border-strong: rgba(115, 245, 226, 0.24);
+  --dashboard-glow: rgba(45, 211, 191, 0.1);
+  --dashboard-track: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
@@ -145,7 +157,9 @@
     @apply min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary;
     background-image:
       linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 18%),
+      radial-gradient(26% 22% at 12% 8%, rgba(45,211,191,0.12) 0%, transparent 100%),
       radial-gradient(70% 52% at 50% 0%, var(--page-top-glow) 0%, transparent 100%),
+      radial-gradient(24% 22% at 48% 10%, rgba(45,211,191,0.1) 0%, transparent 100%),
       radial-gradient(44% 36% at 84% 18%, var(--page-side-glow) 0%, transparent 100%),
       radial-gradient(36% 26% at 18% 12%, rgba(91, 241, 213, 0.04) 0%, transparent 100%),
       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
@@ -425,5 +439,149 @@
     box-shadow:
       0 12px 28px var(--surface-glow),
       inset 0 1px 0 rgba(255,255,255,0.14);
+  }
+
+  .dashboard-frame {
+    position: relative;
+    border: 1px solid var(--dashboard-border);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.02), transparent 18%),
+      radial-gradient(circle at 50% 0%, rgba(45,211,191,0.08), transparent 40%),
+      var(--dashboard-surface-strong);
+    box-shadow:
+      0 24px 100px rgba(0, 0, 0, 0.38),
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      0 0 0 1px rgba(45,211,191,0.05);
+    backdrop-filter: blur(28px);
+  }
+
+  .dashboard-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% -12%, rgba(45,211,191,0.12), transparent 36%),
+      radial-gradient(circle at 8% 12%, rgba(45,211,191,0.08), transparent 24%);
+  }
+
+  .dashboard-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--dashboard-border);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.02), transparent 22%),
+      var(--dashboard-surface);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      0 20px 45px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+  }
+
+  .dashboard-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 110%, rgba(45,211,191,0.08), transparent 38%);
+  }
+
+  .dashboard-card-soft {
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    backdrop-filter: blur(16px);
+  }
+
+  .dashboard-shell-button {
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 10px 22px rgba(0, 0, 0, 0.12);
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .dashboard-shell-button:hover {
+    border-color: rgba(45,211,191,0.2);
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+    color: white;
+  }
+
+  .dashboard-shell-button-active {
+    border-color: var(--dashboard-border-strong);
+    background:
+      linear-gradient(180deg, rgba(45,211,191,0.18), rgba(15,108,102,0.14)),
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    box-shadow:
+      0 0 30px var(--dashboard-glow),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .dashboard-brand-mark {
+    border: 1px solid var(--dashboard-border-strong);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(45,211,191,0.24), transparent 65%),
+      rgba(8, 14, 22, 0.96);
+    box-shadow:
+      0 0 24px var(--dashboard-glow),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .dashboard-sidebar-item-active {
+    border: 1px solid rgba(45,211,191,0.2);
+    background:
+      linear-gradient(90deg, rgba(45,211,191,0.18), rgba(45,211,191,0.02) 62%, transparent),
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      0 0 22px var(--dashboard-glow);
+  }
+
+  .dashboard-primary-button {
+    position: relative;
+    border: 1px solid rgba(115,245,226,0.28);
+    background:
+      linear-gradient(180deg, rgba(37,223,206,0.82), rgba(19,149,137,0.74));
+    box-shadow:
+      0 0 32px var(--dashboard-glow),
+      inset 0 1px 0 rgba(255,255,255,0.28);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      filter 180ms ease;
+  }
+
+  .dashboard-primary-button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow:
+      0 0 42px rgba(45,211,191,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.34);
+  }
+
+  .dashboard-outline-button {
+    position: relative;
+    border: 1px solid rgba(115,245,226,0.18);
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      0 8px 24px rgba(0,0,0,0.16);
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .dashboard-outline-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(115,245,226,0.28);
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
   }
 }
