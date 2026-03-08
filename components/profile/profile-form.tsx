@@ -91,10 +91,14 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr]">
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <label className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                  <label
+                    htmlFor="profile-display-name"
+                    className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground"
+                  >
                     Имя / псевдоним
                   </label>
                   <Input
+                    id="profile-display-name"
                     value={displayName}
                     onChange={(event) => setDisplayName(event.target.value)}
                     placeholder="Например, Алина"
@@ -142,10 +146,14 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               </div>
 
               <div className="space-y-3">
-                <label className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                <label
+                  htmlFor="profile-about"
+                  className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground"
+                >
                   О себе
                 </label>
                 <Textarea
+                  id="profile-about"
                   value={about}
                   onChange={(event) => setAbout(event.target.value)}
                   placeholder="Например: “Собираю профиль для личного понимания и будущего сравнения в отношениях”."

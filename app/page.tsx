@@ -1,5 +1,5 @@
-import { LocalHub } from "@/components/profile/local-hub";
+import { HomeDashboard } from "@/components/dashboard/home-dashboard";
 
 export default function HomePage() {
-  return <LocalHub />;
+  return <HomeDashboard />;
 }

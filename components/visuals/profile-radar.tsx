@@ -97,7 +97,7 @@ export function ProfileRadar({
   className,
   primaryLabel = "Профиль",
   secondaryLabel,
-  primaryStroke = "#00E5FF",
+  primaryStroke = "var(--primary)",
   secondaryStroke = "var(--radar-secondary)",
   centerLabel,
   centerValue,
@@ -160,7 +160,7 @@ export function ProfileRadar({
           >
             <defs>
               <linearGradient id={`radar-fill-${token}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor={primaryStroke} stopOpacity="0.18" />
+                <stop offset="0%" stopColor={primaryStroke} stopOpacity="0.22" />
                 <stop offset="100%" stopColor={primaryStroke} stopOpacity="0.06" />
               </linearGradient>
               <linearGradient id={`radar-secondary-${token}`} x1="0" y1="0" x2="1" y2="1">
@@ -233,15 +233,15 @@ export function ProfileRadar({
                 <circle
                   cx={vertex.primaryPosition.x}
                   cy={vertex.primaryPosition.y}
-                  r="1.35"
+                  r="1.45"
                   fill={primaryStroke}
-                  opacity="0.24"
+                  opacity="0.26"
                   filter={`url(#radar-glow-${token})`}
                 />
                 <circle
                   cx={vertex.primaryPosition.x}
                   cy={vertex.primaryPosition.y}
-                  r="0.9"
+                  r="0.92"
                   fill={primaryStroke}
                   filter={`url(#radar-glow-${token})`}
                 />

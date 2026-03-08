@@ -57,6 +57,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   ];
 
   const isTestRunner = pathname.includes("/tests") && currentProfileId;
+  const isDashboardHome = pathname === "/";
+
+  if (isDashboardHome) {
+    return <div className="relative min-h-screen">{children}</div>;
+  }
 
   return (
     <div className="relative min-h-screen">
