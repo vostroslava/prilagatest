@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import {
+  DASHBOARD_RECENT_COMPARISONS,
   DASHBOARD_QUICK_ACTIONS,
   DASHBOARD_TEST_BLOCK_PRESETS,
 } from "@/components/dashboard/config";
@@ -11,6 +12,7 @@ import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { JourneyTimeline } from "@/components/dashboard/journey-timeline";
 import { ProfileRadarWidget } from "@/components/dashboard/profile-radar-widget";
 import { QuickActions } from "@/components/dashboard/quick-actions";
+import { RecentComparisons } from "@/components/dashboard/recent-comparisons";
 import { TestBlocks } from "@/components/dashboard/test-blocks";
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { TEST_BLOCKS } from "@/content/tests";
@@ -181,9 +183,7 @@ export function HomeDashboard() {
         <div className="space-y-6">
           <TestBlocks items={testBlockItems} />
           <QuickActions items={quickActions} />
-          <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
-            Recent comparisons slot
-          </div>
+          <RecentComparisons items={DASHBOARD_RECENT_COMPARISONS} />
         </div>
       </div>
     </DashboardShell>
