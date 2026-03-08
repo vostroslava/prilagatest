@@ -48,7 +48,13 @@ export function QuickActions({ items }: QuickActionsProps) {
 
       <div className="mt-5 space-y-3">
         {items.map((item) => (
-          <ActionRow key={item.key} {...item} />
+          <ActionRow
+            key={item.key}
+            href={item.href}
+            label={item.label}
+            icon={item.icon}
+            active={item.active}
+          />
         ))}
       </div>
     </section>

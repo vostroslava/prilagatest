@@ -7,7 +7,6 @@ import {
   BookOpenText,
   BrainCircuit,
   Flame,
-  GitCompareArrows,
   Home,
   Info,
   Plus,

@@ -31,7 +31,7 @@ function getAccentClasses(accent: TestBlockItem["accent"]) {
 
 export function TestBlocks({ items }: TestBlocksProps) {
   return (
-    <section className="dashboard-card flex h-full min-h-[12.6rem] flex-col rounded-[2rem] p-5">
+    <section className="dashboard-card flex min-h-[12.6rem] flex-col rounded-[2rem] p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-2xl font-semibold tracking-tight text-white">Тестовые блоки</h2>
         <span className="h-px w-12 bg-[linear-gradient(90deg,transparent,#1dd7c6,transparent)]" />
