@@ -1,13 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  PolarGrid,
-  Radar,
-  RadarChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
 
 import { cn } from "@/lib/utils";
 
@@ -30,59 +23,71 @@ interface ProfileRadarProps {
   showLabels?: boolean;
 }
 
-function RadarTooltip({
-  active,
-  payload,
-  label,
-  primaryLabel,
-  secondaryLabel,
-}: {
-  active?: boolean;
-  payload?: ReadonlyArray<{ dataKey?: string | number; value?: number | string }>;
-  label?: string | number;
-  primaryLabel: string;
-  secondaryLabel?: string;
-}) {
-  if (!active || !payload?.length) {
-    return null;
-  }
-
-  const primaryValue = payload.find((entry) => entry.dataKey === "value")?.value;
-  const secondaryValue = payload.find((entry) => entry.dataKey === "secondaryValue")?.value;
-
-  return (
-    <div className="rounded-[1.25rem] border border-[color:var(--surface-border-strong)] bg-[var(--radar-tooltip)] px-4 py-3 shadow-[var(--surface-shadow-soft)] backdrop-blur-xl">
-      <p className="text-sm font-medium text-foreground">{label}</p>
-      <div className="mt-2 space-y-1 text-sm text-muted-foreground">
-        <p>
-          {primaryLabel}: {primaryValue ?? "—"}
-        </p>
-        {secondaryLabel ? (
-          <p>
-            {secondaryLabel}: {secondaryValue ?? "—"}
-          </p>
-        ) : null}
-      </div>
-    </div>
-  );
+interface CartesianPoint {
+  x: number;
+  y: number;
 }
 
-function buildLabelPositions(data: RadarPoint[]) {
+interface ChartVertex {
+  label: string;
+  labelPosition: CartesianPoint;
+  outerPosition: CartesianPoint;
+  primaryPosition: CartesianPoint;
+  secondaryPosition: CartesianPoint | null;
+  value: number;
+  secondaryValue: number | null;
+}
+
+const VIEWBOX_SIZE = 100;
+const CHART_CENTER = 50;
+const OUTER_RADIUS = 30;
+const LABEL_RADIUS = 40;
+const GRID_LEVELS = 5;
+
+function clampPercent(value: number) {
+  return Math.max(0, Math.min(value, 100));
+}
+
+function toRadians(angle: number) {
+  return ((angle - 90) * Math.PI) / 180;
+}
+
+function polarToCartesian(angle: number, radius: number): CartesianPoint {
+  const radians = toRadians(angle);
+
+  return {
+    x: CHART_CENTER + Math.cos(radians) * radius,
+    y: CHART_CENTER + Math.sin(radians) * radius,
+  };
+}
+
+function pointsToString(points: CartesianPoint[]) {
+  return points.map((point) => `${point.x},${point.y}`).join(" ");
+}
+
+function buildVertices(data: RadarPoint[]) {
   if (!data.length) {
     return [];
   }
 
   return data.map((point, index) => {
-    const angle = ((index * 360) / data.length - 90) * (Math.PI / 180);
-    const radius = 40;
-    const x = 50 + Math.cos(angle) * radius;
-    const y = 50 + Math.sin(angle) * radius;
+    const angle = (index / data.length) * 360;
+    const primaryValue = clampPercent(point.value);
+    const normalizedSecondary =
+      typeof point.secondaryValue === "number" ? clampPercent(point.secondaryValue) : null;
 
     return {
       label: point.label,
-      x,
-      y,
-    };
+      labelPosition: polarToCartesian(angle, LABEL_RADIUS),
+      outerPosition: polarToCartesian(angle, OUTER_RADIUS),
+      primaryPosition: polarToCartesian(angle, (OUTER_RADIUS * primaryValue) / 100),
+      secondaryPosition:
+        normalizedSecondary === null
+          ? null
+          : polarToCartesian(angle, (OUTER_RADIUS * normalizedSecondary) / 100),
+      value: primaryValue,
+      secondaryValue: normalizedSecondary,
+    } satisfies ChartVertex;
   });
 }
 
@@ -99,13 +104,36 @@ export function ProfileRadar({
   showLabels = true,
 }: ProfileRadarProps) {
   const token = React.useId().replaceAll(":", "");
-  const [isMounted, setIsMounted] = React.useState(false);
-  const hasSecondary = data.some((point) => typeof point.secondaryValue === "number");
-  const labelPositions = React.useMemo(() => buildLabelPositions(data), [data]);
+  const vertices = React.useMemo(() => buildVertices(data), [data]);
 
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const hasData = vertices.length > 0;
+  const hasSecondary = vertices.some((point) => point.secondaryPosition !== null);
+
+  const gridPolygons = React.useMemo(
+    () =>
+      Array.from({ length: GRID_LEVELS }, (_, index) => {
+        const ratio = (index + 1) / GRID_LEVELS;
+        const points = vertices.map((vertex, vertexIndex) =>
+          polarToCartesian((vertexIndex / vertices.length) * 360, OUTER_RADIUS * ratio),
+        );
+
+        return pointsToString(points);
+      }),
+    [vertices],
+  );
+
+  const primaryPolygon = React.useMemo(
+    () => pointsToString(vertices.map((vertex) => vertex.primaryPosition)),
+    [vertices],
+  );
+
+  const secondaryPolygon = React.useMemo(
+    () =>
+      pointsToString(
+        vertices.map((vertex) => vertex.secondaryPosition ?? vertex.primaryPosition),
+      ),
+    [vertices],
+  );
 
   return (
     <div
@@ -116,88 +144,135 @@ export function ProfileRadar({
       style={{ height }}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,var(--surface-glow),transparent_28%),radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.05),transparent_50%)]" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl" style={{ background: "var(--hero-orb)" }} />
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl"
+        style={{ background: "var(--hero-orb)" }}
+      />
 
       <div className="relative h-full w-full">
-        {isMounted ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={data} outerRadius="67%">
-              <defs>
-                <linearGradient id={`radar-fill-${token}`} x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor={primaryStroke} stopOpacity={0.72} />
-                  <stop offset="100%" stopColor={primaryStroke} stopOpacity={0.08} />
-                </linearGradient>
-                <linearGradient id={`radar-secondary-${token}`} x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor={secondaryStroke} stopOpacity={0.3} />
-                  <stop offset="100%" stopColor={secondaryStroke} stopOpacity={0.04} />
-                </linearGradient>
-                <filter id={`radar-glow-${token}`} x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="6" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
+        {hasData ? (
+          <svg
+            viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
+            className="h-full w-full"
+            role="img"
+            aria-label={`${primaryLabel}${secondaryLabel ? ` и ${secondaryLabel}` : ""}`}
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <linearGradient id={`radar-fill-${token}`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor={primaryStroke} stopOpacity="0.72" />
+                <stop offset="100%" stopColor={primaryStroke} stopOpacity="0.08" />
+              </linearGradient>
+              <linearGradient id={`radar-secondary-${token}`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor={secondaryStroke} stopOpacity="0.28" />
+                <stop offset="100%" stopColor={secondaryStroke} stopOpacity="0.05" />
+              </linearGradient>
+              <filter id={`radar-glow-${token}`} x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1.6" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
 
-              <PolarGrid stroke="var(--radar-grid)" radialLines={false} />
+            {gridPolygons.map((polygon, index) => (
+              <polygon
+                key={`grid-${index + 1}`}
+                points={polygon}
+                fill="none"
+                stroke="var(--radar-grid)"
+                strokeWidth={index === gridPolygons.length - 1 ? 0.45 : 0.35}
+              />
+            ))}
 
-              {hasSecondary ? (
-                <Radar
-                  dataKey="secondaryValue"
-                  stroke={secondaryStroke}
-                  strokeWidth={1.6}
-                  fill={`url(#radar-secondary-${token})`}
-                  fillOpacity={1}
+            {vertices.map((vertex) => (
+              <line
+                key={`spoke-${vertex.label}`}
+                x1={CHART_CENTER}
+                y1={CHART_CENTER}
+                x2={vertex.outerPosition.x}
+                y2={vertex.outerPosition.y}
+                stroke="var(--radar-grid)"
+                strokeWidth="0.3"
+              />
+            ))}
+
+            {hasSecondary ? (
+              <polygon
+                points={secondaryPolygon}
+                fill={`url(#radar-secondary-${token})`}
+                stroke={secondaryStroke}
+                strokeWidth="0.7"
+              />
+            ) : null}
+
+            <polygon
+              points={primaryPolygon}
+              fill={`url(#radar-fill-${token})`}
+              stroke={primaryStroke}
+              strokeWidth="0.95"
+              filter={`url(#radar-glow-${token})`}
+            />
+
+            {vertices.map((vertex) =>
+              vertex.secondaryPosition ? (
+                <circle
+                  key={`secondary-dot-${vertex.label}`}
+                  cx={vertex.secondaryPosition.x}
+                  cy={vertex.secondaryPosition.y}
+                  r="0.7"
+                  fill={secondaryStroke}
+                  opacity="0.8"
                 />
-              ) : null}
+              ) : null,
+            )}
 
-              <Radar
-                dataKey="value"
-                stroke={primaryStroke}
-                strokeWidth={2.2}
-                fill={`url(#radar-fill-${token})`}
-                fillOpacity={1}
+            {vertices.map((vertex) => (
+              <circle
+                key={`primary-dot-${vertex.label}`}
+                cx={vertex.primaryPosition.x}
+                cy={vertex.primaryPosition.y}
+                r="0.95"
+                fill={primaryStroke}
                 filter={`url(#radar-glow-${token})`}
-              />
-
-              <Tooltip
-                content={({ active, payload, label }) => (
-                  <RadarTooltip
-                    active={active}
-                    payload={payload as ReadonlyArray<{ dataKey?: string | number; value?: number | string }> | undefined}
-                    label={label}
-                    primaryLabel={primaryLabel}
-                    secondaryLabel={secondaryLabel}
-                  />
-                )}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+              >
+                <title>
+                  {vertex.label}: {primaryLabel} {vertex.value}
+                  {secondaryLabel && vertex.secondaryValue !== null
+                    ? `, ${secondaryLabel} ${vertex.secondaryValue}`
+                    : ""}
+                </title>
+              </circle>
+            ))}
+          </svg>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative aspect-square w-[70%] max-w-[320px] rounded-full border border-[color:var(--radar-grid)]">
               <div className="absolute inset-[12%] rounded-full border border-[color:var(--radar-grid)]" />
               <div className="absolute inset-[24%] rounded-full border border-[color:var(--radar-grid)]" />
               <div className="absolute inset-[36%] rounded-full border border-[color:var(--radar-grid)]" />
-              <div className="absolute inset-1/2 size-16 -translate-x-1/2 -translate-y-1/2 rounded-full blur-sm" style={{ background: "var(--hero-orb)" }} />
+              <div
+                className="absolute inset-1/2 size-16 -translate-x-1/2 -translate-y-1/2 rounded-full blur-sm"
+                style={{ background: "var(--hero-orb)" }}
+              />
             </div>
           </div>
         )}
       </div>
 
-      {showLabels ? (
+      {showLabels && hasData ? (
         <div className="pointer-events-none absolute inset-0">
-          {labelPositions.map((point) => (
+          {vertices.map((vertex) => (
             <div
-              key={point.label}
+              key={`label-${vertex.label}`}
               className="absolute max-w-[7rem] -translate-x-1/2 -translate-y-1/2 px-2 text-center text-[11px] font-medium leading-4 text-[color:var(--radar-label)] sm:text-xs"
               style={{
-                left: `${point.x}%`,
-                top: `${point.y}%`,
+                left: `${vertex.labelPosition.x}%`,
+                top: `${vertex.labelPosition.y}%`,
               }}
             >
-              {point.label}
+              {vertex.label}
             </div>
           ))}
         </div>
