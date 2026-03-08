@@ -3,11 +3,13 @@
 import * as React from "react";
 
 import {
+  DASHBOARD_QUICK_ACTIONS,
   DASHBOARD_TEST_BLOCK_PRESETS,
 } from "@/components/dashboard/config";
 import { HeroBanner } from "@/components/dashboard/hero-banner";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { ProfileRadarWidget } from "@/components/dashboard/profile-radar-widget";
+import { QuickActions } from "@/components/dashboard/quick-actions";
 import { TestBlocks } from "@/components/dashboard/test-blocks";
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { TEST_BLOCKS } from "@/content/tests";
@@ -89,6 +91,29 @@ export function HomeDashboard() {
     [focusProfile],
   );
 
+  const quickActions = React.useMemo(
+    () =>
+      DASHBOARD_QUICK_ACTIONS.map((action, index) => {
+        switch (action.key) {
+          case "compare":
+            return { ...action, href: "/compare" };
+          case "export":
+            return {
+              ...action,
+              href: focusProfile ? `/profiles/${focusProfile.profileMeta.id}/raw-data` : "/profiles/new",
+            };
+          case "info":
+            return {
+              ...action,
+              href: focusProfile ? `/profiles/${focusProfile.profileMeta.id}/results` : "/profiles/new",
+            };
+          default:
+            return { ...action, href: "/profiles/new", active: index === 0 };
+        }
+      }),
+    [focusProfile],
+  );
+
   return (
     <DashboardShell
       currentProfileId={focusProfile?.profileMeta.id ?? null}
@@ -114,9 +139,7 @@ export function HomeDashboard() {
 
         <div className="space-y-6">
           <TestBlocks items={testBlockItems} />
-          <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
-            Quick actions slot
-          </div>
+          <QuickActions items={quickActions} />
           <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
             Recent comparisons slot
           </div>
