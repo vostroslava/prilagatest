@@ -53,8 +53,8 @@
   --ring: oklch(0.63 0.12 195 / 0.3);
   --destructive: oklch(0.58 0.2 25);
   --radius: 1rem;
-  --surface-panel: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(245,250,253,0.82) 100%);
-  --surface-panel-strong: linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(249,251,253,0.9) 100%);
+  --surface-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(245, 250, 253, 0.82) 100%);
+  --surface-panel-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(249, 251, 253, 0.9) 100%);
   --surface-inset: rgba(246, 249, 252, 0.92);
   --surface-inset-strong: rgba(255, 255, 255, 0.96);
   --surface-control: rgba(255, 255, 255, 0.82);
@@ -65,8 +65,8 @@
   --surface-divider: rgba(15, 23, 42, 0.08);
   --surface-border: rgba(15, 23, 42, 0.12);
   --surface-border-strong: rgba(15, 23, 42, 0.18);
-  --surface-shadow: 0 24px 60px rgba(15, 23, 42, 0.09), inset 0 1px 0 rgba(255,255,255,0.76);
-  --surface-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+  --surface-shadow: 0 24px 60px rgba(15, 23, 42, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  --surface-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   --surface-glow: rgba(39, 201, 185, 0.12);
   --hero-orb: radial-gradient(circle, rgba(84, 230, 208, 0.24), rgba(84, 230, 208, 0.08) 38%, transparent 72%);
   --page-top-glow: rgba(45, 211, 191, 0.1);
@@ -82,16 +82,10 @@
   --radar-tooltip: rgba(255, 255, 255, 0.94);
   --shell-highlight: rgba(45, 211, 191, 0.14);
   --shell-line: rgba(45, 211, 191, 0.22);
-  --dashboard-surface: rgba(245, 249, 252, 0.9);
-  --dashboard-surface-strong: rgba(255, 255, 255, 0.96);
-  --dashboard-border: rgba(15, 23, 42, 0.1);
-  --dashboard-border-strong: rgba(15, 23, 42, 0.16);
-  --dashboard-glow: rgba(45, 211, 191, 0.08);
-  --dashboard-track: rgba(15, 23, 42, 0.12);
 }
 
 .dark {
-  --background: oklch(0.10 0.012 255);
+  --background: oklch(0.125 0.01 255);
   --foreground: oklch(0.965 0.006 255);
   --card: oklch(0.18 0.008 255);
   --card-foreground: oklch(0.965 0.006 255);
@@ -121,16 +115,16 @@
   --surface-divider: rgba(138, 194, 205, 0.1);
   --surface-border: rgba(164, 214, 224, 0.1);
   --surface-border-strong: rgba(164, 214, 224, 0.16);
-  --surface-shadow: 0 30px 80px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255,255,255,0.05);
-  --surface-shadow-soft: 0 22px 50px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.04);
+  --surface-shadow: 0 30px 80px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --surface-shadow-soft: 0 22px 50px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   --surface-glow: rgba(83, 240, 214, 0.16);
   --hero-orb: radial-gradient(circle, rgba(98, 240, 214, 0.52), rgba(98, 240, 214, 0.16) 42%, transparent 74%);
-  --page-top-glow: rgba(69, 235, 206, 0.1);
-  --page-side-glow: rgba(45, 211, 191, 0.08);
-  --heading-gradient: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.72) 100%);
+  --page-top-glow: rgba(69, 235, 206, 0.12);
+  --page-side-glow: rgba(20, 111, 211, 0.06);
+  --heading-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.72) 100%);
   --progress-track: rgba(255, 255, 255, 0.1);
-  --progress-fill: linear-gradient(90deg, rgba(91,241,213,0.88), rgba(112,233,215,0.7) 70%, rgba(255,255,255,0.26) 100%);
-  --progress-fill-muted: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.18) 100%);
+  --progress-fill: linear-gradient(90deg, rgba(91, 241, 213, 0.88), rgba(112, 233, 215, 0.7) 70%, rgba(255, 255, 255, 0.26) 100%);
+  --progress-fill-muted: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.18) 100%);
   --radar-background: rgba(8, 15, 21, 0.9);
   --radar-grid: rgba(255, 255, 255, 0.14);
   --radar-label: rgba(231, 239, 244, 0.82);
@@ -138,28 +132,22 @@
   --radar-tooltip: rgba(10, 17, 22, 0.92);
   --shell-highlight: rgba(91, 241, 213, 0.16);
   --shell-line: rgba(91, 241, 213, 0.24);
-  --dashboard-surface: rgba(10, 16, 25, 0.7);
-  --dashboard-surface-strong: rgba(8, 14, 22, 0.88);
-  --dashboard-border: rgba(45, 211, 191, 0.15);
-  --dashboard-border-strong: rgba(115, 245, 226, 0.24);
-  --dashboard-glow: rgba(45, 211, 191, 0.1);
-  --dashboard-track: rgba(255, 255, 255, 0.1);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     @apply scroll-smooth font-sans antialiased;
   }
+
   body {
     @apply min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary;
     background-image:
-      linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 18%),
-      radial-gradient(26% 22% at 12% 8%, rgba(45,211,191,0.1) 0%, transparent 100%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 18%),
       radial-gradient(70% 52% at 50% 0%, var(--page-top-glow) 0%, transparent 100%),
-      radial-gradient(22% 18% at 48% 10%, rgba(45,211,191,0.08) 0%, transparent 100%),
       radial-gradient(44% 36% at 84% 18%, var(--page-side-glow) 0%, transparent 100%),
       radial-gradient(36% 26% at 18% 12%, rgba(91, 241, 213, 0.04) 0%, transparent 100%),
       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
@@ -181,7 +169,7 @@
     border: 1px solid var(--surface-border);
     box-shadow:
       var(--surface-shadow),
-      0 0 0 1px rgba(255,255,255,0.015);
+      0 0 0 1px rgba(255, 255, 255, 0.015);
   }
 
   .panel-strong {
@@ -206,14 +194,14 @@
     background: var(--surface-quiet);
     border: 1px solid var(--surface-border);
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
       0 10px 24px rgba(0, 0, 0, 0.08);
   }
 
   .control-surface {
     background: var(--surface-control);
     border: 1px solid var(--surface-border);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     transition:
       background-color 180ms ease,
       border-color 180ms ease,
@@ -232,7 +220,7 @@
     background: var(--surface-control-active);
     border-color: color-mix(in srgb, var(--primary) 40%, transparent);
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
       0 0 0 1px color-mix(in srgb, var(--primary) 16%, transparent);
   }
 
@@ -248,7 +236,7 @@
     border: 1px solid var(--surface-border);
     background: var(--surface-control);
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
       0 8px 20px rgba(0, 0, 0, 0.04);
     transition:
       background-color 180ms ease,
@@ -278,7 +266,7 @@
     border-color: color-mix(in srgb, var(--primary) 36%, var(--surface-border-strong));
     box-shadow:
       0 14px 28px var(--surface-glow),
-      inset 0 1px 0 rgba(255,255,255,0.12);
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
   .shell-control[data-active="true"]::after,
@@ -325,7 +313,7 @@
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--muted-foreground) 88%, transparent);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .metric-chip {
@@ -341,7 +329,7 @@
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--foreground);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .section-kicker {
@@ -364,7 +352,7 @@
       linear-gradient(180deg, color-mix(in srgb, var(--surface-control) 95%, transparent), color-mix(in srgb, var(--surface-inset) 92%, transparent));
     color: var(--primary);
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
       0 12px 28px rgba(0, 0, 0, 0.06);
   }
 
@@ -399,11 +387,11 @@
     overflow: hidden;
     border: 1px solid var(--surface-border-strong);
     background:
-      linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 24%),
       var(--surface-panel-strong);
     box-shadow:
       var(--surface-shadow),
-      inset 0 1px 0 rgba(255,255,255,0.04);
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .dashboard-shell::after {
@@ -429,7 +417,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 20%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, transparent 20%);
     pointer-events: none;
   }
 
@@ -442,7 +430,7 @@
     border: 1px solid var(--surface-border-strong);
     box-shadow:
       var(--surface-shadow),
-      inset 0 1px 0 rgba(255,255,255,0.05);
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .glow-divider {
@@ -455,203 +443,138 @@
     border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent);
     box-shadow:
       0 12px 28px var(--surface-glow),
-      inset 0 1px 0 rgba(255,255,255,0.14);
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
   }
 
+  /* ──── Dashboard Frame (outer shell) ──── */
   .dashboard-frame {
     position: relative;
     border: 1px solid var(--dashboard-border);
     background:
-      linear-gradient(180deg, rgba(255,255,255,0.018), transparent 18%),
-      radial-gradient(circle at 50% 0%, rgba(45,211,191,0.08), transparent 38%),
-      rgba(8, 14, 22, 0.85);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, transparent 20%),
+      var(--dashboard-surface-strong);
     box-shadow:
-      0 24px 100px rgba(0, 0, 0, 0.38),
-      inset 0 1px 0 rgba(255,255,255,0.04),
-      0 0 0 1px rgba(45,211,191,0.05);
-    backdrop-filter: blur(28px);
+      0 40px 100px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(24px);
   }
 
   .dashboard-frame::before {
     content: "";
     position: absolute;
     inset: 0;
-    pointer-events: none;
+    border-radius: inherit;
     background:
-      radial-gradient(circle at 50% -12%, rgba(45,211,191,0.1), transparent 34%),
-      radial-gradient(circle at 8% 12%, rgba(45,211,191,0.06), transparent 24%);
-  }
-
-  .dashboard-frame::after {
-    content: "";
-    position: absolute;
-    left: 11%;
-    right: 11%;
-    bottom: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(45,211,191,0.18) 25%, rgba(115,245,226,0.7) 50%, rgba(45,211,191,0.18) 75%, transparent 100%);
-    box-shadow: 0 0 16px rgba(45,211,191,0.22);
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(45, 211, 191, 0.06), transparent),
+      radial-gradient(ellipse 40% 30% at 90% 20%, rgba(20, 111, 211, 0.04), transparent);
     pointer-events: none;
   }
 
-  .dashboard-page-bg {
-    background-color: oklch(0.10 0.012 255);
-    background-image:
-      radial-gradient(44% 28% at 50% 0%, rgba(45,211,191,0.1), transparent 100%),
-      radial-gradient(34% 24% at 88% 14%, rgba(45,211,191,0.08), transparent 100%),
-      radial-gradient(28% 24% at 10% 8%, rgba(45,211,191,0.05), transparent 100%);
-  }
-
-  .dashboard-card {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--dashboard-border);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.02), transparent 22%),
-      var(--dashboard-surface);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.04),
-      0 20px 45px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(20px);
-  }
-
-  .dashboard-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(circle at 50% 110%, rgba(45,211,191,0.08), transparent 38%);
-  }
-
-  .dashboard-card-soft {
-    border: 1px solid rgba(255,255,255,0.1);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.022)),
-      linear-gradient(180deg, rgba(45,211,191,0.02), transparent 72%);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.05),
-      0 10px 24px rgba(0, 0, 0, 0.12);
-    backdrop-filter: blur(16px);
-  }
-
+  /* ──── Dashboard Shell Buttons (TopNav pills & icon buttons) ──── */
   .dashboard-shell-button {
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.05),
-      0 10px 22px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.55);
     transition:
       background-color 180ms ease,
       border-color 180ms ease,
       color 180ms ease,
-      box-shadow 180ms ease,
-      transform 180ms ease;
+      box-shadow 180ms ease;
   }
 
   .dashboard-shell-button:hover {
-    border-color: rgba(45,211,191,0.2);
-    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-    color: white;
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .dashboard-shell-button-active {
-    border-color: rgba(115, 245, 226, 0.3);
+    border-color: var(--dashboard-border-strong);
     background:
-      linear-gradient(180deg, rgba(45,211,191,0.2), rgba(15,108,102,0.15)),
-      linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
+      linear-gradient(180deg, rgba(45, 211, 191, 0.12), rgba(45, 211, 191, 0.04)),
+      rgba(255, 255, 255, 0.05);
+    color: white;
     box-shadow:
-      0 0 20px rgba(45, 211, 191, 0.15),
-      inset 0 1px 0 rgba(255,255,255,0.08);
+      0 0 34px var(--dashboard-glow),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .dashboard-shell-button-active::after {
     content: "";
     position: absolute;
-    left: 18%;
-    right: 18%;
     bottom: -1px;
+    left: 25%;
+    right: 25%;
     height: 2px;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, transparent 0%, rgba(93, 246, 228, 0.85) 50%, transparent 100%);
-    box-shadow:
-      0 0 18px rgba(45, 211, 191, 0.55),
-      0 0 30px rgba(45, 211, 191, 0.25);
-    pointer-events: none;
+    border-radius: 1px;
+    background: linear-gradient(90deg, transparent, rgba(45, 211, 191, 0.6), transparent);
   }
 
+  /* ──── Dashboard Brand Mark (Logo container) ──── */
   .dashboard-brand-mark {
     border: 1px solid var(--dashboard-border-strong);
     background:
-      radial-gradient(circle at 50% 0%, rgba(45,211,191,0.24), transparent 65%),
-      rgba(8, 14, 22, 0.96);
+      linear-gradient(135deg, rgba(45, 211, 191, 0.08), rgba(8, 14, 22, 0.9));
     box-shadow:
       0 0 24px var(--dashboard-glow),
-      inset 0 1px 0 rgba(255,255,255,0.06);
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
+  /* ──── Dashboard Sidebar Active Item ──── */
   .dashboard-sidebar-item-active {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(45,211,191,0.2);
     background:
-      linear-gradient(90deg, rgba(45,211,191,0.12), rgba(45,211,191,0.02) 62%, transparent),
-      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      linear-gradient(90deg, rgba(45, 211, 191, 0.14), transparent 70%);
+    border-left: 3px solid rgba(45, 211, 191, 0.8);
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.04),
+      -4px 0 16px rgba(45, 211, 191, 0.12),
       0 0 22px var(--dashboard-glow);
   }
 
-  .dashboard-sidebar-item-active::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 16%;
-    bottom: 16%;
-    width: 3px;
-    border-radius: 9999px;
-    background: rgba(45, 211, 191, 0.95);
-    box-shadow: 0 0 12px rgba(45, 211, 191, 0.8);
-  }
-
+  /* ──── Dashboard Primary Button (CTA) ──── */
   .dashboard-primary-button {
-    position: relative;
-    border: 1px solid rgba(115,245,226,0.28);
-    background:
-      linear-gradient(180deg, rgba(37,223,206,0.82), rgba(19,149,137,0.74));
+    background: linear-gradient(180deg, rgba(28, 223, 202, 0.9), rgba(16, 185, 168, 0.82));
+    border: 1px solid rgba(115, 245, 226, 0.4);
     box-shadow:
-      0 8px 24px rgba(45,211,191,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.28);
+      0 0 32px var(--dashboard-glow),
+      0 8px 24px rgba(45, 211, 191, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition:
       transform 180ms ease,
       box-shadow 180ms ease,
-      filter 180ms ease;
+      background 180ms ease;
   }
 
   .dashboard-primary-button:hover {
     transform: translateY(-1px);
-    filter: brightness(1.03);
     box-shadow:
-      0 0 42px rgba(45,211,191,0.18),
-      inset 0 1px 0 rgba(255,255,255,0.34);
+      0 0 44px rgba(45, 211, 191, 0.3),
+      0 12px 32px rgba(45, 211, 191, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
 
+  /* ──── Dashboard Outline Button ──── */
   .dashboard-outline-button {
-    position: relative;
-    border: 1px solid rgba(115,245,226,0.18);
-    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.04),
-      0 8px 24px rgba(0,0,0,0.16);
+    border: 1px solid var(--dashboard-border);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.7);
     transition:
-      transform 180ms ease,
+      background-color 180ms ease,
       border-color 180ms ease,
-      background-color 180ms ease;
+      color 180ms ease,
+      box-shadow 180ms ease;
   }
 
   .dashboard-outline-button:hover {
-    transform: translateY(-1px);
-    border-color: rgba(115,245,226,0.28);
-    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    border-color: var(--dashboard-border-strong);
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    box-shadow: 0 0 20px var(--dashboard-glow);
+  }
+
+  /* ──── Dashboard Card Soft (for inner panels) ──── */
+  .dashboard-card-soft {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
   }
 }
