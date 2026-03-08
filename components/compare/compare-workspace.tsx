@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { CompareAnalysisPanel } from "@/components/analysis/compare-analysis-panel";
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -285,6 +286,11 @@ export function CompareWorkspace() {
 
       {comparison ? (
         <>
+          <CompareAnalysisPanel
+            leftProfile={comparison.leftProfile}
+            rightProfile={comparison.rightProfile}
+          />
+
           <section className="dashboard-card-strong rounded-[2.55rem] p-6 sm:p-7">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
               <div>

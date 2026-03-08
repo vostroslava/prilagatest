@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { ProfileAnalysisPanel } from "@/components/analysis/profile-analysis-panel";
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -302,6 +303,8 @@ export function ResultsView({ profileId }: ResultsViewProps) {
           </div>
         </div>
       </section>
+
+      <ProfileAnalysisPanel profile={profile} />
     </div>
   );
 }
