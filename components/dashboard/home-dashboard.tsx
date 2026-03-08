@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { HeroBanner } from "@/components/dashboard/hero-banner";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { useProfiles } from "@/components/providers/profiles-provider";
 
@@ -37,9 +38,10 @@ export function HomeDashboard() {
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_21.5rem]">
         <div className="space-y-6">
-          <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
-            Dashboard scaffold
-          </div>
+          <HeroBanner
+            displayName={displayName}
+            continueHref={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/tests` : "/profiles/new"}
+          />
           <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
             Profile widget slot
           </div>
