@@ -66,14 +66,14 @@ export function DashboardSidebar({
         <p className="text-xl font-semibold tracking-tight text-white">Прогресс</p>
 
         <div className="mt-5 flex justify-center">
-          <div className="relative flex size-28 items-center justify-center rounded-full border border-[color:var(--dashboard-border)] bg-[rgba(8,14,22,0.9)]">
+          <div className="relative flex size-28 items-center justify-center rounded-full border border-[color:var(--dashboard-border)] bg-[rgba(6,11,17,0.96)] shadow-[0_0_22px_rgba(45,211,191,0.08)]">
             <div
-              className="absolute inset-2 rounded-full"
+              className="absolute inset-[0.45rem] rounded-full"
               style={{
                 background: `conic-gradient(#19d4c4 0deg, #19d4c4 ${clampedProgress * 3.6}deg, rgba(255,255,255,0.08) ${clampedProgress * 3.6}deg, rgba(255,255,255,0.08) 360deg)`,
               }}
             />
-            <div className="absolute inset-[0.65rem] rounded-full bg-[rgba(8,14,22,0.98)] ring-1 ring-white/8" />
+            <div className="absolute inset-[0.85rem] rounded-full bg-[rgba(6,11,17,0.98)] ring-1 ring-white/8" />
             <div className="relative text-center">
               <div className="text-3xl font-semibold tracking-tight text-white">{clampedProgress}%</div>
               <div className="mt-1 text-[11px] uppercase tracking-[0.22em] text-white/40">

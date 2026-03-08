@@ -25,9 +25,9 @@ export function JourneyTimeline({
               {index < DASHBOARD_JOURNEY_STEPS.length - 1 ? (
                 <span
                   className={cn(
-                    "absolute left-1/2 top-4 h-px w-full -translate-y-1/2",
+                    "absolute left-1/2 top-7 h-[2px] w-full -translate-y-1/2",
                     completed || active
-                      ? "bg-[linear-gradient(90deg,rgba(37,223,206,0.86),rgba(37,223,206,0.32))]"
+                      ? "bg-[linear-gradient(90deg,rgba(37,223,206,0.92),rgba(37,223,206,0.42))] shadow-[0_0_8px_rgba(45,211,191,0.34)]"
                       : "bg-[linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04))]",
                   )}
                 />
@@ -36,14 +36,15 @@ export function JourneyTimeline({
               <div
                 className={cn(
                   "relative z-10 flex items-center justify-center rounded-full border",
-                  active && "size-9 border-cyan-200/70 bg-[rgba(14,40,48,0.95)] shadow-[0_0_24px_rgba(45,211,191,0.55)]",
-                  completed && !active && "size-6 border-cyan-300/55 bg-cyan-300/90 shadow-[0_0_18px_rgba(45,211,191,0.45)]",
-                  upcoming && "size-6 border-white/18 bg-[rgba(255,255,255,0.05)]",
+                  active && "size-14 border-2 border-cyan-200/80 bg-[rgba(11,27,36,0.98)] shadow-[0_0_24px_rgba(0,229,255,0.4)]",
+                  completed && !active && "size-4 border-cyan-300/55 bg-cyan-300 shadow-[0_0_8px_rgba(45,211,191,0.9)]",
+                  upcoming && "size-3.5 border-white/18 bg-white/20",
                 )}
               >
                 {active ? (
                   <>
-                    <span className="absolute inset-[-6px] rounded-full border border-cyan-300/38" />
+                    <span className="absolute inset-[-6px] rounded-full border-2 border-cyan-300/42" />
+                    <span className="absolute inset-[6px] rounded-full ring-2 ring-cyan-300/32" />
                     <span className="size-3 rounded-full bg-cyan-200 shadow-[0_0_12px_rgba(45,211,191,1)]" />
                   </>
                 ) : null}

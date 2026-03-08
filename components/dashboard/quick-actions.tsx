@@ -22,10 +22,10 @@ function ActionRow({
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[4.2rem] items-center overflow-hidden rounded-[1.3rem] px-5 text-sm text-white/84 transition-all duration-200 hover:-translate-y-0.5",
+        "group relative flex h-14 w-full items-center overflow-hidden rounded-2xl px-5 text-sm text-white/84 transition-all duration-200 hover:-translate-y-0.5",
         active
           ? "border border-cyan-300/28 bg-[linear-gradient(90deg,rgba(45,211,191,0.24),rgba(255,255,255,0.045))] shadow-[0_0_24px_rgba(45,211,191,0.14)]"
-          : "dashboard-card-soft border border-white/10 bg-white/5",
+          : "border border-white/[0.06] bg-white/[0.03] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
       )}
     >
       {active ? (

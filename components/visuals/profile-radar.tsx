@@ -160,15 +160,15 @@ export function ProfileRadar({
           >
             <defs>
               <linearGradient id={`radar-fill-${token}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor={primaryStroke} stopOpacity="0.72" />
-                <stop offset="100%" stopColor={primaryStroke} stopOpacity="0.08" />
+                <stop offset="0%" stopColor={primaryStroke} stopOpacity="0.22" />
+                <stop offset="100%" stopColor={primaryStroke} stopOpacity="0.06" />
               </linearGradient>
               <linearGradient id={`radar-secondary-${token}`} x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor={secondaryStroke} stopOpacity="0.28" />
                 <stop offset="100%" stopColor={secondaryStroke} stopOpacity="0.05" />
               </linearGradient>
               <filter id={`radar-glow-${token}`} x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="1.6" result="blur" />
+                <feGaussianBlur stdDeviation="1.9" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -211,7 +211,7 @@ export function ProfileRadar({
               points={primaryPolygon}
               fill={`url(#radar-fill-${token})`}
               stroke={primaryStroke}
-              strokeWidth="0.95"
+              strokeWidth="1.05"
               filter={`url(#radar-glow-${token})`}
             />
 
@@ -229,14 +229,23 @@ export function ProfileRadar({
             )}
 
             {vertices.map((vertex) => (
-              <circle
-                key={`primary-dot-${vertex.label}`}
-                cx={vertex.primaryPosition.x}
-                cy={vertex.primaryPosition.y}
-                r="0.88"
-                fill={primaryStroke}
-                filter={`url(#radar-glow-${token})`}
-              />
+              <g key={`primary-dot-${vertex.label}`}>
+                <circle
+                  cx={vertex.primaryPosition.x}
+                  cy={vertex.primaryPosition.y}
+                  r="1.45"
+                  fill={primaryStroke}
+                  opacity="0.26"
+                  filter={`url(#radar-glow-${token})`}
+                />
+                <circle
+                  cx={vertex.primaryPosition.x}
+                  cy={vertex.primaryPosition.y}
+                  r="0.92"
+                  fill={primaryStroke}
+                  filter={`url(#radar-glow-${token})`}
+                />
+              </g>
             ))}
           </svg>
         ) : (

@@ -20,15 +20,14 @@ function getMetricTrackStyle(key: string) {
   if (key === "neuroticism") {
     return {
       background:
-        "linear-gradient(90deg, rgba(255,122,144,0.95), rgba(255,170,188,0.62) 72%, rgba(255,255,255,0.08) 100%)",
-      boxShadow: "0 0 16px rgba(255,122,144,0.28)",
+        "linear-gradient(90deg, rgba(255,122,144,0.95), rgba(255,170,188,0.72) 72%, rgba(255,255,255,0.08) 100%)",
+      boxShadow: "0 0 12px rgba(255,122,144,0.38)",
     };
   }
 
   return {
-    background:
-      "linear-gradient(90deg, rgba(82,245,225,0.95), rgba(58,208,216,0.76) 72%, rgba(255,255,255,0.08) 100%)",
-    boxShadow: "0 0 16px rgba(45,211,191,0.28)",
+    background: "linear-gradient(90deg, #0ea5e9, #2dd4bf)",
+    boxShadow: "0 0 12px rgba(45,211,191,0.4)",
   };
 }
 
@@ -76,7 +75,7 @@ export function ProfileRadarWidget({
                 <span className="text-base font-medium text-white/82">{metric.label}</span>
                 <span className="text-base font-semibold text-cyan-300">{metric.value}%</span>
               </div>
-              <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/8">
+              <div className="mt-3 h-[4px] overflow-hidden rounded-full bg-white/8">
                 <div
                   className="h-full rounded-full"
                   style={{

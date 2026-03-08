@@ -15,7 +15,7 @@ export function DashboardShell({
   children,
 }: DashboardShellProps) {
   return (
-    <div className="min-h-screen px-6 py-6 lg:px-8">
+    <div className="dark dashboard-page-bg min-h-screen px-6 py-6 lg:px-8">
       <div className="dashboard-frame mx-auto max-w-[1460px] overflow-hidden rounded-[2.4rem]">
         <DashboardTopNav
           displayName={displayName}

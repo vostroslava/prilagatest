@@ -24,12 +24,12 @@ export function RecentComparisons({ items }: RecentComparisonsProps) {
             href="/compare"
             className="dashboard-card-soft flex items-center gap-3 rounded-[1.35rem] px-4 py-3 transition-transform duration-200 hover:-translate-y-0.5"
           >
-            <div className="flex -space-x-2">
+            <div className="flex -space-x-3">
               <span
-                className={`size-10 rounded-full bg-gradient-to-br ${item.leftTone} ring-2 ring-[rgba(8,14,22,0.98)]`}
+                className={`size-10 rounded-full bg-gradient-to-br ${item.leftTone} ring-2 ring-[color:var(--dashboard-surface-strong)]`}
               />
               <span
-                className={`size-10 rounded-full bg-gradient-to-br ${item.rightTone} ring-2 ring-[rgba(8,14,22,0.98)]`}
+                className={`size-10 rounded-full bg-gradient-to-br ${item.rightTone} ring-2 ring-[color:var(--dashboard-surface-strong)]`}
               />
             </div>
 
@@ -37,13 +37,13 @@ export function RecentComparisons({ items }: RecentComparisonsProps) {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-white">{item.leftName}</span>
                 {item.connected ? (
-                  <span className="size-1.5 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+                  <span className="size-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(45,211,191,0.8)]" />
                 ) : null}
                 <span className="truncate text-sm text-white/74">{item.rightName}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-1 text-[11px] uppercase tracking-[0.22em] text-white/38">
+            <div className="flex items-center gap-1 text-[11px] tracking-[0.02em] text-white/40">
               <span>{item.dateLabel}</span>
               <ChevronRight className="size-3.5" />
             </div>
