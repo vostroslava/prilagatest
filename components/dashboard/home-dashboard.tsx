@@ -7,9 +7,18 @@ import {
 } from "@/components/dashboard/config";
 import { HeroBanner } from "@/components/dashboard/hero-banner";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ProfileRadarWidget } from "@/components/dashboard/profile-radar-widget";
 import { TestBlocks } from "@/components/dashboard/test-blocks";
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { TEST_BLOCKS } from "@/content/tests";
+
+const FALLBACK_RADAR = [
+  { label: "Открытость", value: 74 },
+  { label: "Сознательность", value: 66 },
+  { label: "Экстраверсия", value: 58 },
+  { label: "Доброжелательность", value: 71 },
+  { label: "Нейротизм", value: 42 },
+];
 
 export function HomeDashboard() {
   const { profiles, currentProfile, account } = useProfiles();
@@ -51,6 +60,35 @@ export function HomeDashboard() {
     [focusProfile],
   );
 
+  const radarData = React.useMemo(
+    () =>
+      focusProfile
+        ? focusProfile.scoring["big-five"].map((scale) => ({
+            label: scale.label,
+            value: scale.normalized ?? 0,
+          }))
+        : FALLBACK_RADAR,
+    [focusProfile],
+  );
+
+  const scaleMetrics = React.useMemo(
+    () =>
+      focusProfile
+        ? focusProfile.scoring["big-five"].map((scale) => ({
+            key: scale.key,
+            label: scale.label,
+            value: scale.normalized ?? 0,
+          }))
+        : [
+            { key: "openness", label: "Открытость", value: 74 },
+            { key: "conscientiousness", label: "Сознательность", value: 66 },
+            { key: "extraversion", label: "Экстраверсия", value: 58 },
+            { key: "agreeableness", label: "Доброжелательность", value: 71 },
+            { key: "neuroticism", label: "Нейротизм", value: 42 },
+          ],
+    [focusProfile],
+  );
+
   return (
     <DashboardShell
       currentProfileId={focusProfile?.profileMeta.id ?? null}
@@ -63,9 +101,12 @@ export function HomeDashboard() {
             displayName={displayName}
             continueHref={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/tests` : "/profiles/new"}
           />
-          <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
-            Profile widget slot
-          </div>
+          <ProfileRadarWidget
+            title="Мой профиль"
+            radarData={radarData}
+            metrics={scaleMetrics}
+            profileHref={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/results` : "/profiles/new"}
+          />
           <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
             Journey timeline slot
           </div>
