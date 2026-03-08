@@ -223,6 +223,7 @@
   }
 
   .shell-control {
+    position: relative;
     display: inline-flex;
     min-height: 2.5rem;
     height: 2.5rem;
@@ -264,6 +265,22 @@
     box-shadow:
       0 14px 28px var(--surface-glow),
       inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+
+  .shell-control[data-active="true"]::after,
+  .shell-control[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, transparent 0%, rgba(93, 246, 228, 0.82) 50%, transparent 100%);
+    box-shadow:
+      0 0 14px rgba(45, 211, 191, 0.42),
+      0 0 24px rgba(45, 211, 191, 0.2);
+    pointer-events: none;
   }
 
   .shell-control-icon {
