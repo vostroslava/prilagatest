@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -33,46 +34,96 @@
 }
 
 :root {
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.14 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.14 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.14 0 0);
-  --primary: oklch(0.62 0.1 195);
+  --background: oklch(0.972 0.008 240);
+  --foreground: oklch(0.235 0.02 255);
+  --card: oklch(0.992 0.006 255);
+  --card-foreground: oklch(0.235 0.02 255);
+  --popover: oklch(0.995 0.004 255);
+  --popover-foreground: oklch(0.235 0.02 255);
+  --primary: oklch(0.63 0.12 195);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.18 0 0);
-  --muted: oklch(0.95 0 0);
-  --muted-foreground: oklch(0.48 0 0);
-  --accent: oklch(0.94 0 0);
-  --accent-foreground: oklch(0.18 0 0);
-  --border: oklch(0.9 0 0);
-  --input: oklch(0.9 0 0);
-  --ring: oklch(0.62 0.1 195 / 0.35);
+  --secondary: oklch(0.95 0.008 245);
+  --secondary-foreground: oklch(0.26 0.02 255);
+  --muted: oklch(0.94 0.007 245);
+  --muted-foreground: oklch(0.44 0.015 255);
+  --accent: oklch(0.95 0.008 245);
+  --accent-foreground: oklch(0.24 0.02 255);
+  --border: oklch(0.88 0.01 250);
+  --input: oklch(0.88 0.01 250);
+  --ring: oklch(0.63 0.12 195 / 0.3);
   --destructive: oklch(0.58 0.2 25);
   --radius: 1rem;
+  --surface-panel: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(245,250,253,0.82) 100%);
+  --surface-panel-strong: linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(249,251,253,0.9) 100%);
+  --surface-inset: rgba(246, 249, 252, 0.92);
+  --surface-inset-strong: rgba(255, 255, 255, 0.96);
+  --surface-control: rgba(255, 255, 255, 0.82);
+  --surface-control-hover: rgba(255, 255, 255, 0.94);
+  --surface-control-active: rgba(221, 248, 243, 0.96);
+  --surface-divider: rgba(15, 23, 42, 0.08);
+  --surface-border: rgba(15, 23, 42, 0.1);
+  --surface-border-strong: rgba(15, 23, 42, 0.16);
+  --surface-shadow: 0 24px 60px rgba(15, 23, 42, 0.09), inset 0 1px 0 rgba(255,255,255,0.76);
+  --surface-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+  --surface-glow: rgba(39, 201, 185, 0.12);
+  --hero-orb: radial-gradient(circle, rgba(84, 230, 208, 0.24), rgba(84, 230, 208, 0.08) 38%, transparent 72%);
+  --page-top-glow: rgba(45, 211, 191, 0.1);
+  --page-side-glow: rgba(59, 130, 246, 0.05);
+  --heading-gradient: linear-gradient(180deg, rgba(22, 31, 44, 0.98) 0%, rgba(45, 58, 76, 0.72) 100%);
+  --progress-track: rgba(15, 23, 42, 0.12);
+  --progress-fill: linear-gradient(90deg, rgba(25, 180, 165, 0.88), rgba(110, 214, 202, 0.82) 64%, rgba(170, 239, 230, 0.6) 100%);
+  --progress-fill-muted: linear-gradient(90deg, rgba(88, 103, 126, 0.78), rgba(143, 156, 177, 0.42) 100%);
+  --radar-background: rgba(255, 255, 255, 0.82);
+  --radar-grid: rgba(15, 23, 42, 0.14);
+  --radar-label: rgba(28, 40, 56, 0.8);
+  --radar-secondary: rgba(86, 101, 124, 0.62);
+  --radar-tooltip: rgba(255, 255, 255, 0.94);
 }
 
 .dark {
-  --background: oklch(0.13 0 0);
-  --foreground: oklch(0.98 0 0);
-  --card: oklch(0.16 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.16 0 0);
-  --popover-foreground: oklch(0.98 0 0);
+  --background: oklch(0.145 0.008 255);
+  --foreground: oklch(0.965 0.006 255);
+  --card: oklch(0.18 0.008 255);
+  --card-foreground: oklch(0.965 0.006 255);
+  --popover: oklch(0.18 0.008 255);
+  --popover-foreground: oklch(0.965 0.006 255);
   --primary: oklch(0.75 0.12 195);
-  --primary-foreground: oklch(0.13 0 0);
-  --secondary: oklch(0.18 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.2 0 0);
-  --accent-foreground: oklch(0.98 0 0);
-  --border: oklch(0.25 0 0);
-  --input: oklch(0.25 0 0);
+  --primary-foreground: oklch(0.15 0.008 255);
+  --secondary: oklch(0.21 0.006 255);
+  --secondary-foreground: oklch(0.95 0.006 255);
+  --muted: oklch(0.23 0.006 255);
+  --muted-foreground: oklch(0.74 0.01 255);
+  --accent: oklch(0.22 0.006 255);
+  --accent-foreground: oklch(0.95 0.006 255);
+  --border: oklch(0.29 0.006 255);
+  --input: oklch(0.29 0.006 255);
   --ring: oklch(0.75 0.12 195 / 0.5);
   --destructive: oklch(0.67 0.2 25);
+  --surface-panel: linear-gradient(180deg, rgba(12,18,24,0.86) 0%, rgba(11,16,22,0.8) 100%);
+  --surface-panel-strong: linear-gradient(180deg, rgba(14,20,27,0.9) 0%, rgba(11,16,22,0.88) 100%);
+  --surface-inset: rgba(20, 27, 35, 0.84);
+  --surface-inset-strong: rgba(17, 24, 32, 0.92);
+  --surface-control: rgba(255, 255, 255, 0.05);
+  --surface-control-hover: rgba(255, 255, 255, 0.09);
+  --surface-control-active: rgba(61, 219, 198, 0.16);
+  --surface-divider: rgba(255, 255, 255, 0.08);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --surface-border-strong: rgba(255, 255, 255, 0.13);
+  --surface-shadow: 0 24px 70px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255,255,255,0.06);
+  --surface-shadow-soft: 0 18px 44px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255,255,255,0.05);
+  --surface-glow: rgba(83, 240, 214, 0.14);
+  --hero-orb: radial-gradient(circle, rgba(98, 240, 214, 0.4), rgba(98, 240, 214, 0.16) 38%, transparent 72%);
+  --page-top-glow: rgba(98, 240, 214, 0.1);
+  --page-side-glow: rgba(37, 99, 235, 0.05);
+  --heading-gradient: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.72) 100%);
+  --progress-track: rgba(255, 255, 255, 0.1);
+  --progress-fill: linear-gradient(90deg, rgba(91,241,213,0.88), rgba(112,233,215,0.7) 70%, rgba(255,255,255,0.26) 100%);
+  --progress-fill-muted: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.18) 100%);
+  --radar-background: rgba(9, 16, 22, 0.88);
+  --radar-grid: rgba(255, 255, 255, 0.14);
+  --radar-label: rgba(231, 239, 244, 0.82);
+  --radar-secondary: rgba(255, 255, 255, 0.62);
+  --radar-tooltip: rgba(10, 17, 22, 0.92);
 }
 
 @layer base {
@@ -85,23 +136,89 @@
   body {
     @apply min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary;
     background-image:
-      radial-gradient(100% 100% at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 100%),
+      radial-gradient(80% 60% at 50% 0%, var(--page-top-glow) 0%, transparent 100%),
+      radial-gradient(55% 45% at 100% 20%, var(--page-side-glow) 0%, transparent 100%),
       url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--ring);
   }
 }
 
 @layer utilities {
   .glass-panel {
-    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--surface-panel);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--surface-shadow);
+  }
+
+  .panel-strong {
+    background: var(--surface-panel-strong);
+    border: 1px solid var(--surface-border-strong);
+    box-shadow: var(--surface-shadow);
+  }
+
+  .panel-inset {
+    background: var(--surface-inset);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--surface-shadow-soft);
+  }
+
+  .panel-inset-strong {
+    background: var(--surface-inset-strong);
+    border: 1px solid var(--surface-border-strong);
+    box-shadow: var(--surface-shadow-soft);
+  }
+
+  .control-surface {
+    background: var(--surface-control);
+    border: 1px solid var(--surface-border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .control-surface:hover {
+    background: var(--surface-control-hover);
+    border-color: var(--surface-border-strong);
+  }
+
+  .control-surface[data-state="active"],
+  .control-surface[aria-pressed="true"] {
+    background: var(--surface-control-active);
+    border-color: color-mix(in srgb, var(--primary) 40%, transparent);
     box-shadow:
-      0 4px 24px -1px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+      inset 0 1px 0 rgba(255,255,255,0.12),
+      0 0 0 1px color-mix(in srgb, var(--primary) 16%, transparent);
+  }
+
+  .soft-divider {
+    background: var(--surface-divider);
+  }
+
+  .elevated-hover {
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .elevated-hover:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      var(--surface-shadow-soft),
+      0 0 0 1px var(--surface-border-strong);
   }
 
   .text-gradient {
-    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%);
+    background: var(--heading-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

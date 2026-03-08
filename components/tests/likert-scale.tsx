@@ -12,22 +12,20 @@ interface LikertScaleProps {
 
 export function LikertScale({ value, onChange, disabled = false }: LikertScaleProps) {
   return (
-    <div className="w-full space-y-8">
-      <div className="flex items-center justify-between px-2 text-[12px] uppercase tracking-[0.2em] font-medium text-white/40">
+    <div className="w-full space-y-6">
+      <div className="flex items-center justify-between px-1 text-[11px] uppercase tracking-[0.24em] font-medium text-muted-foreground">
         <span>Совсем не похоже</span>
         <span>Очень похоже</span>
       </div>
 
-      <div 
+      <div
         className={cn(
-          "flex items-stretch justify-between h-24 sm:h-32 w-full gap-2 p-2 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
-          disabled && "opacity-60 pointer-events-none"
+          "panel-inset-strong grid w-full grid-cols-5 gap-2 rounded-[2rem] p-2.5 sm:p-3",
+          disabled && "pointer-events-none opacity-65"
         )}
       >
         {STANDARD_LIKERT_OPTIONS.map((option) => {
           const active = option.value === value;
-          const isExtreme = option.value === 1 || option.value === 5;
-          const isNeutral = option.value === 3;
 
           return (
             <button
@@ -37,30 +35,43 @@ export function LikertScale({ value, onChange, disabled = false }: LikertScalePr
               disabled={disabled}
               onClick={() => onChange(option.value)}
               className={cn(
-                "relative flex-1 flex flex-col items-center justify-center rounded-[1.5rem] transition-all duration-500 ease-out group outline-none",
-                active 
-                  ? "bg-primary/20 border border-primary/30 shadow-[0_0_30px_rgba(120,200,200,0.15)] scale-[1.02]" 
-                  : "bg-transparent border border-transparent hover:bg-white/5"
+                "group relative flex min-h-28 flex-col items-center justify-between rounded-[1.5rem] border px-3 py-3 text-center outline-none transition-all duration-200 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-32 sm:px-4 sm:py-4",
+                active
+                  ? "border-primary/40 bg-primary/12 text-foreground ring-1 ring-primary/35 shadow-[0_14px_36px_var(--surface-glow)]"
+                  : "border-[color:var(--surface-border)] bg-[var(--surface-control)] text-muted-foreground hover:border-[color:var(--surface-border-strong)] hover:bg-[var(--surface-control-hover)] hover:text-foreground"
               )}
             >
-              <div 
-                className={cn(
-                  "size-2.5 rounded-full transition-all duration-300 mb-3",
-                  active 
-                    ? "bg-primary shadow-[0_0_10px_currentColor] scale-100" 
-                    : isNeutral
-                      ? "bg-white/10 scale-75"
-                      : isExtreme
-                        ? "bg-white/25 scale-75 group-hover:scale-100"
-                        : "bg-white/20 scale-75 group-hover:scale-100"
-                )}
-              />
-              <span className={cn(
-                "text-xs font-medium transition-all duration-300 px-2 text-center leading-tight",
-                active ? "text-primary opacity-100 translate-y-0" : "text-white/40 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
-              )}>
-                {option.description}
-              </span>
+              <div className="flex w-full flex-col items-center gap-3">
+                <span
+                  className={cn(
+                    "flex size-8 items-center justify-center rounded-full border text-sm font-semibold transition-all",
+                    active
+                      ? "border-primary/40 bg-primary/18 text-primary"
+                      : "border-[color:var(--surface-border)] bg-[var(--surface-inset)] text-foreground/78",
+                  )}
+                >
+                  {option.label}
+                </span>
+                <div
+                  className={cn(
+                    "size-2.5 rounded-full transition-all duration-200",
+                    active
+                      ? "bg-primary shadow-[0_0_12px_currentColor]"
+                      : "bg-muted-foreground/40 group-hover:bg-primary/50",
+                  )}
+                />
+              </div>
+
+              <div className="mt-4 flex w-full flex-1 items-end justify-center">
+                <span
+                  className={cn(
+                    "text-sm leading-5 transition-colors",
+                    active ? "text-foreground" : "text-muted-foreground group-hover:text-foreground/90",
+                  )}
+                >
+                  {option.description}
+                </span>
+              </div>
             </button>
           );
         })}

@@ -16,7 +16,12 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="outline" size="icon" className="rounded-full" disabled>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        className="control-surface rounded-full"
+        disabled
+      >
         <MoonStar className="size-4" />
       </Button>
     );
@@ -26,9 +31,9 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="outline"
-      size="icon"
-      className="rounded-full"
+      variant="ghost"
+      size="icon-sm"
+      className="control-surface rounded-full text-muted-foreground hover:text-foreground"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Переключить тему"
     >

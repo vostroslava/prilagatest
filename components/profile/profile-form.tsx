@@ -65,78 +65,92 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <Card className="glass-panel border-white/10">
-        <CardHeader>
-          <CardTitle className="font-display text-3xl">
-            {profile ? "Редактировать локальный профиль" : "Создать локальный профиль"}
-          </CardTitle>
-          <CardDescription className="max-w-2xl text-base leading-7">
-            Данные по умолчанию остаются на устройстве. Эта версия не использует
-            серверное хранилище профилей и не строит автоматические выводы о
-            совместимости.
-          </CardDescription>
+    <div className="grid gap-6 xl:grid-cols-[1.12fr_0.88fr]">
+      <Card className="glass-panel rounded-[2.4rem] border-[color:var(--surface-border)]">
+        <CardHeader className="space-y-5">
+          <div className="flex flex-wrap gap-2">
+            <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+              {profile ? "Edit profile" : "Create profile"}
+            </Badge>
+            <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+              local-only
+            </Badge>
+          </div>
+          <div className="space-y-4">
+            <CardTitle className="font-display text-5xl leading-[0.98] tracking-tight text-foreground">
+              {profile ? "Обновить локальный профиль" : "Создать новый живой профиль"}
+            </CardTitle>
+            <CardDescription className="max-w-3xl text-base leading-8">
+              Данные остаются на устройстве и становятся основой для прохождения тестов,
+              полного экспорта и последующего ручного сравнения двух людей.
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <form className="space-y-8" onSubmit={handleSubmit}>
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">Имя или псевдоним</label>
-              <Input
-                value={displayName}
-                onChange={(event) => setDisplayName(event.target.value)}
-                placeholder="Например, Алина"
-                className="h-12 rounded-2xl"
-                required
-              />
-            </div>
+            <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr]">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <label className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                    Имя / псевдоним
+                  </label>
+                  <Input
+                    value={displayName}
+                    onChange={(event) => setDisplayName(event.target.value)}
+                    placeholder="Например, Алина"
+                    className="h-13 rounded-[1.4rem] text-base"
+                    required
+                  />
+                </div>
 
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">
-                Короткая заметка о себе
-              </label>
-              <Textarea
-                value={about}
-                onChange={(event) => setAbout(event.target.value)}
-                placeholder="Необязательно. Например: «Собираю профиль для личного понимания и сравнения в отношениях»."
-                className="min-h-32 rounded-3xl"
-              />
-            </div>
+                <div className="space-y-3">
+                  <label className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                    Контексты
+                  </label>
+                  <div className="grid gap-3">
+                    {PROFILE_CONTEXT_OPTIONS.map((option) => {
+                      const active = contexts.includes(option.key);
 
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-foreground">Контексты профиля</p>
-                <p className="text-sm text-muted-foreground">
-                  Можно выбрать несколько. Это не влияет на scoring, но помогает
-                  сохранить цель профиля в экспорте.
-                </p>
+                      return (
+                        <button
+                          key={option.key}
+                          type="button"
+                          className={cn(
+                            "rounded-[1.5rem] border px-4 py-4 text-left transition-all duration-300",
+                            active
+                              ? "border-primary/35 bg-primary/10 shadow-[0_0_24px_var(--surface-glow)]"
+                              : "panel-inset hover:border-[color:var(--surface-border-strong)]",
+                          )}
+                          onClick={() => toggleContext(option.key)}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="text-sm font-medium text-foreground">{option.label}</span>
+                            {active ? (
+                              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 shadow-none">
+                                active
+                              </Badge>
+                            ) : null}
+                          </div>
+                          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                            {option.description}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                {PROFILE_CONTEXT_OPTIONS.map((option) => {
-                  const active = contexts.includes(option.key);
-
-                  return (
-                    <button
-                      key={option.key}
-                      type="button"
-                      className={cn(
-                        "rounded-[1.5rem] border px-4 py-4 text-left transition-colors",
-                        active
-                          ? "border-primary/60 bg-primary/10"
-                          : "border-white/10 bg-background/40 hover:border-primary/30",
-                      )}
-                      onClick={() => toggleContext(option.key)}
-                    >
-                      <div className="mb-2 flex items-center justify-between">
-                        <span className="font-medium">{option.label}</span>
-                        {active ? <Badge className="rounded-full">Выбрано</Badge> : null}
-                      </div>
-                      <p className="text-sm leading-6 text-muted-foreground">
-                        {option.description}
-                      </p>
-                    </button>
-                  );
-                })}
+              <div className="space-y-3">
+                <label className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                  О себе
+                </label>
+                <Textarea
+                  value={about}
+                  onChange={(event) => setAbout(event.target.value)}
+                  placeholder="Например: “Собираю профиль для личного понимания и будущего сравнения в отношениях”."
+                  className="min-h-[340px] rounded-[1.8rem] text-base"
+                />
               </div>
             </div>
 
@@ -150,27 +164,39 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                 {profile ? "Сохранить и продолжить" : "Создать профиль и перейти к тестам"}
               </Button>
               <p className="text-sm text-muted-foreground">
-                В первой версии нет обязательной регистрации и нет удалённой базы данных
-                профилей.
+                Регистрация не обязательна. Удалённая база данных не используется.
               </p>
             </div>
           </form>
         </CardContent>
       </Card>
 
-      <Card className="glass-panel border-white/10">
+      <Card className="glass-panel rounded-[2.4rem] border-[color:var(--surface-border)]">
         <CardHeader>
-          <CardTitle className="font-display text-2xl">Что сохранится в профиле</CardTitle>
+          <CardTitle className="font-display text-3xl tracking-tight">
+            Что сохранится в пакете профиля
+          </CardTitle>
           <CardDescription>
-            Всё это потом попадёт в полный экспорт и comparison-package.
+            Это не просто анкета. После прохождения блоков появится полный исследовательский
+            пакет для дальнейшей ручной работы.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 text-sm leading-7 text-muted-foreground">
-          <p>1. Основные метаданные профиля и выбранные контексты.</p>
-          <p>2. Все ответы по Big Five, IPIP-IPC и внутреннему конфликтному модулю.</p>
-          <p>3. Вычисленные шкалы, производные показатели и текстовые интерпретации.</p>
-          <p>4. Сырые вопросы с оригинальными формулировками, русским текстом и item IDs.</p>
-          <p>5. Версии методик и расчётные примечания для ручного внешнего анализа.</p>
+        <CardContent className="space-y-4">
+          {[
+            "Основные метаданные профиля и выбранные контексты.",
+            "Все ответы по Big Five, IPIP-IPC и внутреннему конфликтному модулю.",
+            "Вычисленные шкалы, производные показатели и текстовые интерпретации.",
+            "Сырые вопросы с оригинальными формулировками, русским текстом и item IDs.",
+            "Версии методик и расчётные примечания для ручного внешнего анализа.",
+          ].map((item, index) => (
+            <div
+              key={item}
+              className="panel-inset rounded-[1.5rem] p-4 text-sm leading-7 text-muted-foreground"
+            >
+              <span className="mr-3 font-semibold text-foreground/85">{index + 1}.</span>
+              {item}
+            </div>
+          ))}
         </CardContent>
       </Card>
     </div>

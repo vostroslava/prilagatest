@@ -9,33 +9,38 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { formatDate } from "@/lib/presenters";
 
 export function ProfileSwitcher() {
-  const { profiles, currentProfileId, setCurrentProfileId } = useProfiles();
+  const { profiles, currentProfile, currentProfileId, setCurrentProfileId } = useProfiles();
 
   if (!profiles.length) {
     return (
-      <Button asChild size="sm" className="rounded-full">
-        <Link href="/profiles/new">
+      <Button
+        asChild
+        size="icon-sm"
+        variant="ghost"
+        className="control-surface rounded-full text-muted-foreground hover:text-foreground"
+      >
+        <Link href="/profiles/new" aria-label="Создать профиль">
           <Plus className="size-4" />
-          Создать профиль
         </Link>
       </Button>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2 md:flex-row md:items-center">
+    <div className="flex items-center gap-2">
       <Select
         value={currentProfileId ?? undefined}
         onValueChange={(value) => setCurrentProfileId(String(value))}
       >
-        <SelectTrigger className="w-full min-w-[220px] rounded-full md:w-[260px]">
-          <SelectValue placeholder="Выберите профиль" />
+        <SelectTrigger className="h-10 min-w-[190px] rounded-full px-3 text-sm shadow-none">
+          <span className="truncate">
+            {currentProfile?.profileMeta.displayName ?? "Выберите профиль"}
+          </span>
         </SelectTrigger>
         <SelectContent>
           {profiles.map((profile) => (
@@ -51,22 +56,18 @@ export function ProfileSwitcher() {
         </SelectContent>
       </Select>
 
-      <div className="flex gap-2">
-        <Button asChild variant="outline" size="sm" className="rounded-full">
-          <Link href="/profiles/new">
-            <Plus className="size-4" />
-            Новый
+      {currentProfileId ? (
+        <Button
+          asChild
+          size="icon-sm"
+          variant="ghost"
+          className="control-surface rounded-full text-muted-foreground hover:text-foreground"
+        >
+          <Link href={`/profiles/${currentProfileId}/tests`} aria-label="Продолжить тест">
+            <ChevronRight className="size-4" />
           </Link>
         </Button>
-        {currentProfileId ? (
-          <Button asChild size="sm" className="rounded-full">
-            <Link href={`/profiles/${currentProfileId}/tests`}>
-              Продолжить
-              <ChevronRight className="size-4" />
-            </Link>
-          </Button>
-        ) : null}
-      </div>
+      ) : null}
     </div>
   );
 }

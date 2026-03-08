@@ -51,9 +51,11 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
   const [profiles, setProfiles] = React.useState<StoredProfile[]>([]);
   const [currentProfileId, setCurrentProfileIdState] = React.useState<string | null>(null);
   const [hydrated, setHydrated] = React.useState(false);
+  const profilesRef = React.useRef<StoredProfile[]>([]);
 
   const refreshProfiles = React.useCallback(async () => {
     const nextProfiles = await listProfiles();
+    profilesRef.current = nextProfiles;
     setProfiles(nextProfiles);
 
     if (!nextProfiles.length) {
@@ -87,15 +89,14 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
 
   const persistProfile = React.useCallback(async (profile: StoredProfile) => {
     await saveProfile(profile);
-    setProfiles((current) => {
-      const filtered = current.filter(
-        (entry) => entry.profileMeta.id !== profile.profileMeta.id,
-      );
-
-      return [profile, ...filtered].sort((left, right) =>
-        right.profileMeta.updatedAt.localeCompare(left.profileMeta.updatedAt),
-      );
-    });
+    const filtered = profilesRef.current.filter(
+      (entry) => entry.profileMeta.id !== profile.profileMeta.id,
+    );
+    const nextProfiles = [profile, ...filtered].sort((left, right) =>
+      right.profileMeta.updatedAt.localeCompare(left.profileMeta.updatedAt),
+    );
+    profilesRef.current = nextProfiles;
+    setProfiles(nextProfiles);
 
     return profile;
   }, []);
@@ -129,7 +130,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
         contexts: ProfileContext[];
       },
     ) => {
-      const existing = profiles.find((profile) => profile.profileMeta.id === profileId);
+      const existing = profilesRef.current.find((profile) => profile.profileMeta.id === profileId);
       if (!existing) {
         return null;
       }
@@ -143,7 +144,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       await persistProfile(next);
       return next;
     },
-    [persistProfile, profiles],
+    [persistProfile],
   );
 
   const updateAnswerValue = React.useCallback(
@@ -154,7 +155,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       answer: LikertValue,
       pageNumber: number,
     ) => {
-      const existing = profiles.find((profile) => profile.profileMeta.id === profileId);
+      const existing = profilesRef.current.find((profile) => profile.profileMeta.id === profileId);
       if (!existing) {
         return null;
       }
@@ -163,12 +164,12 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       await persistProfile(next);
       return next;
     },
-    [persistProfile, profiles],
+    [persistProfile],
   );
 
   const setLastVisitedPage = React.useCallback(
     async (profileId: string, blockId: BlockId, pageNumber: number) => {
-      const existing = profiles.find((profile) => profile.profileMeta.id === profileId);
+      const existing = profilesRef.current.find((profile) => profile.profileMeta.id === profileId);
       if (!existing) {
         return null;
       }
@@ -187,13 +188,13 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       await persistProfile(next);
       return next;
     },
-    [persistProfile, profiles],
+    [persistProfile],
   );
 
   const importProfileFromObject = React.useCallback(
     async (payload: unknown) => {
       const parsed = validateProfileExport(payload);
-      const idExists = profiles.some(
+      const idExists = profilesRef.current.some(
         (profile) => profile.profileMeta.id === parsed.profileMeta.id,
       );
 
@@ -217,7 +218,7 @@ export function ProfilesProvider({ children }: { children: React.ReactNode }) {
       setCurrentProfileIdState(nextProfile.profileMeta.id);
       return nextProfile;
     },
-    [persistProfile, profiles],
+    [persistProfile],
   );
 
   const setCurrentProfileId = React.useCallback((profileId: string | null) => {

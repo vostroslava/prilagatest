@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CheckCircle2, PauseCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Sparkles, X } from "lucide-react";
 
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { LikertScale } from "@/components/tests/likert-scale";
@@ -92,6 +92,9 @@ export function TestRunner({ profileId }: TestRunnerProps) {
   const { profiles, updateAnswer, setLastVisitedPage } = useProfiles();
   const [activeBlockId, setActiveBlockId] = React.useState<BlockId>("big-five");
   const [isAdvancing, setIsAdvancing] = React.useState(false);
+  const [transitionState, setTransitionState] = React.useState<
+    "idle" | "exit-forward" | "exit-backward" | "enter-forward" | "enter-backward"
+  >("idle");
   const initializedProfileRef = React.useRef<string | null>(null);
   const advanceTimeoutRef = React.useRef<number | null>(null);
   const profile = profiles.find((entry) => entry.profileMeta.id === profileId) ?? null;
@@ -150,6 +153,7 @@ export function TestRunner({ profileId }: TestRunnerProps) {
     currentResponses.length - 1,
   );
   const currentResponse = currentResponses[currentIndex];
+  const questionPositionInBlock = currentIndex + 1;
   const overallAnswered = Object.values(profile.assessmentProgress).reduce(
     (sum, entry) => sum + entry.answered,
     0,
@@ -193,6 +197,31 @@ export function TestRunner({ profileId }: TestRunnerProps) {
     await setLastVisitedPage(currentProfileId, location.blockId, location.index);
   }
 
+  async function runQuestionTransition(
+    location: QuestionLocation | null,
+    direction: "forward" | "backward",
+  ) {
+    if (!location) {
+      return;
+    }
+
+    setIsAdvancing(true);
+    setTransitionState(direction === "forward" ? "exit-forward" : "exit-backward");
+    await new Promise((resolve) => window.setTimeout(resolve, 180));
+    await jumpToLocation(location);
+    setTransitionState(direction === "forward" ? "enter-forward" : "enter-backward");
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        setTransitionState("idle");
+      });
+    });
+
+    window.setTimeout(() => {
+      setIsAdvancing(false);
+    }, 220);
+  }
+
   async function handleAnswer(answer: LikertValue) {
     if (!currentResponse || isAdvancing) {
       return;
@@ -208,105 +237,196 @@ export function TestRunner({ profileId }: TestRunnerProps) {
     advanceTimeoutRef.current = window.setTimeout(() => {
       void (async () => {
         if (nextLocation) {
-          await jumpToLocation(nextLocation);
+          await runQuestionTransition(nextLocation, "forward");
         } else {
+          setTransitionState("exit-forward");
+          await new Promise((resolve) => window.setTimeout(resolve, 180));
           router.push(`/profiles/${currentProfileId}/results`);
+          setIsAdvancing(false);
         }
-
-        setIsAdvancing(false);
       })();
-    }, 280);
+    }, 200);
   }
 
   async function handleBack() {
-    if (!previousLocation || isAdvancing) {
+    if (!previousLocation) {
       return;
     }
 
-    setIsAdvancing(true);
-    await jumpToLocation(previousLocation);
-    setIsAdvancing(false);
+    if (advanceTimeoutRef.current !== null) {
+      window.clearTimeout(advanceTimeoutRef.current);
+      advanceTimeoutRef.current = null;
+    }
+
+    await runQuestionTransition(previousLocation, "backward");
   }
 
+  const questionMotionClass = cn(
+    "transition-[transform,opacity,filter] duration-200 ease-out will-change-transform",
+    transitionState === "exit-forward" && "-translate-x-8 opacity-0",
+    transitionState === "exit-backward" && "translate-x-8 opacity-0",
+    transitionState === "enter-forward" && "translate-x-8 opacity-0",
+    transitionState === "enter-backward" && "-translate-x-8 opacity-0",
+    transitionState === "idle" && "translate-x-0 opacity-100",
+  );
+
   return (
-    <div className="relative flex flex-col min-h-[100dvh] bg-background selection:bg-primary/30">
-      <div className="fixed top-0 left-0 right-0 h-1 bg-white/5 z-50">
-        <div 
-          className="h-full bg-primary transition-all duration-700 ease-out shadow-[0_0_10px_rgba(120,200,200,0.5)]"
-          style={{ width: `${overallProgress}%` }}
+    <div className="relative grid min-h-[100dvh] bg-background xl:grid-cols-[300px_minmax(0,1fr)]">
+      <div className="fixed left-0 right-0 top-0 z-50 h-1" style={{ background: "var(--progress-track)" }}>
+        <div
+          className="h-full transition-all duration-700 ease-out shadow-[0_0_16px_var(--surface-glow)]"
+          style={{ background: "var(--progress-fill)", width: `${overallProgress}%` }}
           aria-label={completionLabel(overallTotal ? overallAnswered / overallTotal : 0)}
         />
       </div>
 
-      <header className="flex items-center justify-between px-6 py-6 lg:px-12">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            className="rounded-full size-10 border border-white/5 bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
-            disabled={!previousLocation || isAdvancing}
-            onClick={() => void handleBack()}
-          >
-            <ArrowLeft className="size-4" />
-          </Button>
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-mono">
-              {blockLabel(currentBlock.id)} • {currentProgress.answered}/{currentProgress.total}
+      <aside className="hidden border-r border-[color:var(--surface-border)] bg-[var(--surface-panel-strong)] xl:flex xl:flex-col">
+        <div className="flex h-full flex-col px-6 py-8">
+          <div className="space-y-4">
+            <Badge className="w-fit rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+              Test Flow
+            </Badge>
+            <div>
+              <p className="font-display text-3xl tracking-tight text-foreground">
+                {profile.profileMeta.displayName}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                {completionLabel(overallTotal ? overallAnswered / overallTotal : 0)} · {overallAnswered} из {overallTotal}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 space-y-3">
+            {TEST_BLOCKS.map((block) => {
+              const progress = profile.assessmentProgress[block.id];
+              const active = block.id === currentBlock.id;
+
+              return (
+                <div
+                  key={block.id}
+                  className={cn(
+                    "rounded-[1.6rem] p-4 transition-all",
+                    active ? "panel-inset-strong" : "panel-inset",
+                    active && "shadow-[0_18px_44px_var(--surface-glow)]",
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                        Блок {block.order}
+                      </p>
+                      <p className="mt-2 text-base font-semibold tracking-tight text-foreground">
+                        {block.title}
+                      </p>
+                    </div>
+                    {progress.status === "completed" ? (
+                      <CheckCircle2 className="mt-1 size-4 text-primary" />
+                    ) : null}
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{statusLabel(progress.status)}</p>
+                  <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ background: "var(--progress-track)" }}>
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        background: progress.status === "not-started" ? "var(--progress-fill-muted)" : "var(--progress-fill)",
+                        width: `${progress.completionRatio * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="panel-inset mt-auto rounded-[1.6rem] p-4">
+            <div className="inline-flex items-center gap-2 text-xs font-medium text-primary">
+              <Sparkles className="size-3.5" />
+              {isCrossingToNextBlock
+                ? `Дальше откроется ${upcomingBlock?.title.toLowerCase()}`
+                : remainingInBlock > 0
+                  ? `В этом блоке осталось ${remainingInBlock}`
+                  : "Последний вопрос перед итогом"}
+            </div>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              Ответы сохраняются сразу. Вы в любой момент можете выйти и вернуться позже.
             </p>
           </div>
         </div>
+      </aside>
 
-        <Button
-          asChild
-          variant="ghost"
-          className="rounded-full text-[13px] border border-white/5 bg-transparent text-white/50 hover:text-white hover:bg-white/5"
-        >
-          <Link href={`/profiles/${profile.profileMeta.id}/results`}>
-            Приостановить
-          </Link>
-        </Button>
-      </header>
+      <div className="relative flex min-h-[100dvh] flex-col">
+        <header className="flex items-center justify-between px-5 py-5 sm:px-6 lg:px-12">
+          <div className="min-w-0">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+              {blockLabel(currentBlock.id)}
+            </p>
+            <p className="mt-1 text-sm text-foreground/82">
+              Вопрос {absoluteQuestionIndex + 1} из {overallTotal}
+            </p>
+          </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-        <div 
-          key={currentResponse.itemId}
-          className="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700"
-        >
-          <div className="text-center space-y-12">
-            <div className="space-y-6">
-              <span className="inline-block rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/60 font-mono">
-                {currentResponse.itemId}
-              </span>
-              
-              <h1 className="font-display text-4xl md:text-5xl lg:text-[4rem] leading-[1.1] tracking-tight text-gradient font-medium max-w-3xl mx-auto balance-text">
+          <Button
+            asChild
+            variant="outline"
+            className="size-11 rounded-full px-0"
+            aria-label="Прервать тест"
+          >
+            <Link href={`/profiles/${profile.profileMeta.id}/results`}>
+              <X className="size-4" />
+            </Link>
+          </Button>
+        </header>
+
+        <div className="flex flex-1 items-center justify-center px-4 py-8 sm:px-8 lg:px-12">
+          <div
+            className="panel-strong w-full max-w-5xl rounded-[2.6rem] p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 sm:p-8"
+          >
+            <div className={cn("mx-auto flex max-w-4xl flex-col items-center text-center", questionMotionClass)}>
+              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.26em] text-muted-foreground shadow-none">
+                {blockLabel(currentBlock.id)} · {questionPositionInBlock}/{currentProgress.total}
+              </Badge>
+
+              <h1 className="mt-8 font-display text-5xl leading-[1.02] tracking-tight text-foreground balance-text sm:text-6xl lg:text-[4.8rem]">
                 {currentResponse.russianText}
               </h1>
-              
-              <p className="text-sm text-white/40 max-w-xl mx-auto">
-                {currentBlock.title}
-              </p>
-            </div>
 
-            <div className="max-w-3xl mx-auto w-full pt-8">
-              <LikertScale
-                value={currentResponse.answer}
-                disabled={isAdvancing}
-                onChange={(answer) => void handleAnswer(answer)}
-              />
+              <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+                Выберите степень согласия, и следующий вопрос откроется автоматически.
+              </p>
+
+              <div className="mt-10 w-full">
+                <LikertScale
+                  value={currentResponse.answer}
+                  disabled={isAdvancing}
+                  onChange={(answer) => void handleAnswer(answer)}
+                />
+              </div>
+
+              <div className="mt-8 flex w-full flex-col gap-4 border-t border-[color:var(--surface-divider)] pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <Button
+                  variant="outline"
+                  className="rounded-full px-5"
+                  disabled={!previousLocation}
+                  onClick={() => void handleBack()}
+                >
+                  <ArrowLeft className="size-4" />
+                  Назад
+                </Button>
+
+                <p className="text-sm text-muted-foreground">
+                  {currentProgress.answered}/{currentProgress.total} ответов в этом блоке
+                </p>
+              </div>
+
+              <p className="mt-4 text-[11px] uppercase tracking-[0.24em] text-muted-foreground/80">
+                {currentResponse.itemId} · {currentResponse.scaleKey}
+                {currentResponse.reverseKeyed ? " · reverse" : ""}
+                {" · "}
+                {currentResponse.source.instrumentId}
+              </p>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="sr-only">
-        <Badge>{statusLabel(currentProgress.status)}</Badge>
-        <span>{absoluteQuestionIndex}</span>
-        <span>{remainingInBlock}</span>
-        <span>{isCrossingToNextBlock ? upcomingBlock?.title : currentBlock.title}</span>
-        <span>{nextLocation?.blockId ?? "final"}</span>
-        <span>{cn("runner", TEST_BLOCKS.length > 0 && "ready")}</span>
-        {[CheckCircle2, PauseCircle, Sparkles].map((Icon, index) => (
-          <Icon key={index} className="size-4" />
-        ))}
       </div>
     </div>
   );

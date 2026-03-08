@@ -5,9 +5,14 @@ export function downloadBlob(filename: string, content: BlobPart, type: string) 
 
   anchor.href = url;
   anchor.download = filename;
+  anchor.style.display = "none";
+  document.body.appendChild(anchor);
   anchor.click();
 
-  URL.revokeObjectURL(url);
+  window.setTimeout(() => {
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }, 150);
 }
 
 export function slugify(input: string) {
