@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Личный профиль
 
-## Getting Started
+Local-first веб-продукт версии 1 для самопонимания.
 
-First, run the development server:
+Внутри нет AI-анализа, нет обязательной регистрации и нет серверного хранения профилей. Продукт делает три вещи:
+
+1. даёт пройти 3 тестовых блока
+2. собирает полный личный профиль
+3. экспортирует два полных профиля и comparison-package для ручного анализа совместимости вне продукта
+
+## Что реализовано
+
+- создание локального профиля
+- прохождение 3 блоков:
+  - 50-item IPIP Big Five Markers
+  - IPIP-IPC short form
+  - внутренний конфликтный модуль v1
+- автосохранение прогресса в IndexedDB
+- экран личного результата с графиками и текстовым профилем
+- экран сырых данных
+- экспорт:
+  - полный JSON
+  - полный Markdown
+  - полный TXT
+  - короткая сводка
+- импорт JSON-профиля обратно в локальное хранилище
+- сравнение двух полных профилей
+- экспорт `comparison-package.json`
+- экспорт `comparison-package.md`
+
+## Стек
+
+Проверено по официальным рекомендациям и актуальным стабильным пакетам на 2026-03-08:
+
+- Next.js `16.1.6`
+- React `19.2.3`
+- Tailwind CSS `4`
+- shadcn `4.0.1`
+- Recharts `3.8.0`
+- idb `8.0.3`
+- zod `4`
+
+Официальные источники по стеку:
+
+- Next.js installation: <https://nextjs.org/docs/app/getting-started/installation>
+- shadcn installation: <https://ui.shadcn.com/docs/installation>
+
+Замечание по shadcn:
+
+- В актуальной версии CLI для этого стека инициализация подтягивает `@base-ui/react` и современную shadcn-конфигурацию под Tailwind v4. Конфликтов с текущим набором зависимостей в проекте не зафиксировано.
+
+## Запуск
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Дальше откройте:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- <http://localhost:3000>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Основной пользовательский поток
 
-## Learn More
+### 1. Создать профиль
 
-To learn more about Next.js, take a look at the following resources:
+- откройте главную страницу
+- нажмите `Создать локальный профиль`
+- укажите имя или псевдоним
+- добавьте необязательную заметку
+- выберите один или несколько контекстов
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Пройти тесты
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- после создания откроется экран `Тесты`
+- ответы сохраняются локально после каждого выбора
+- можно закрыть страницу и вернуться позже
 
-## Deploy on Vercel
+### 3. Посмотреть результат
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- откройте экран `Результат`
+- там есть:
+  - обзор профиля
+  - график Big Five
+  - радар IPIP-IPC
+  - конфликтный профиль
+  - краткие и подробные интерпретации
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Выгрузить полный профиль
+
+- откройте экран `Сырые данные`
+- выберите нужный формат:
+  - JSON
+  - Markdown
+  - TXT
+  - summary
+
+## Импорт
+
+На главной странице есть действие `Импортировать профиль из JSON`.
+
+Поведение:
+
+- файл читается локально в браузере
+- валидируется по schema
+- записывается в IndexedDB
+- если такой локальный `id` уже есть, создаётся импортированная копия с новым локальным ID
+
+## Сравнение двух людей
+
+Откройте `/compare`.
+
+Есть два способа загрузки:
+
+- выбрать два профиля из уже сохранённых локально
+- загрузить два JSON-экспорта
+
+После загрузки доступны:
+
+- графики по каждому блоку рядом
+- таблицы различий по шкалам
+- сырые ответы рядом
+- экспорт comparison-package в JSON и Markdown
+
+## Ограничения версии 1
+
+- нет автоматической оценки совместимости
+- нет matchmaking
+- нет клинической диагностики
+- конфликтный модуль — внутренний прикладной блок, а не валидированный тест
+
+## Документация
+
+- [docs/test-sources.md](./docs/test-sources.md)
+- [docs/scoring-model.md](./docs/scoring-model.md)
+- [docs/data-model.md](./docs/data-model.md)
+- [docs/manual-analysis-package.md](./docs/manual-analysis-package.md)
+- [docs/privacy-model.md](./docs/privacy-model.md)

@@ -1,0 +1,226 @@
+import type { BlockDefinition, ScaleDefinition } from "@/types/assessment";
+
+import { CONFLICT_SOURCE } from "@/content/tests/version";
+
+const CONFLICT_SCALES: ScaleDefinition[] = [
+  {
+    key: "direct-confrontation",
+    blockId: "conflict-profile",
+    label: "Прямое столкновение",
+    shortLabel: "Прямота",
+    scientificLabel: "Direct confrontation",
+    description: "Насколько человек предпочитает поднимать трудную тему прямо.",
+    type: "core",
+  },
+  {
+    key: "avoidance",
+    blockId: "conflict-profile",
+    label: "Избегание",
+    shortLabel: "Избегание",
+    scientificLabel: "Avoidance",
+    description: "Тенденция откладывать, обходить или сглаживать напряжённый разговор.",
+    type: "core",
+  },
+  {
+    key: "defensiveness",
+    blockId: "conflict-profile",
+    label: "Защитная реакция",
+    shortLabel: "Защита",
+    scientificLabel: "Defensiveness",
+    description: "Скорость перехода в самооправдание и защиту при напряжённой обратной связи.",
+    type: "core",
+  },
+  {
+    key: "silent-withdrawal",
+    blockId: "conflict-profile",
+    label: "Уход в молчание",
+    shortLabel: "Молчание",
+    scientificLabel: "Silent withdrawal",
+    description: "Склонность резко закрываться, обрывать контакт или минимизировать ответы.",
+    type: "core",
+  },
+  {
+    key: "tension-accumulation",
+    blockId: "conflict-profile",
+    label: "Накопление напряжения",
+    shortLabel: "Накопление",
+    scientificLabel: "Tension accumulation",
+    description: "Склонность долго носить напряжение внутри и не разряжать его сразу.",
+    type: "core",
+  },
+  {
+    key: "harshness",
+    blockId: "conflict-profile",
+    label: "Резкость формулировок",
+    shortLabel: "Резкость",
+    scientificLabel: "Harsh language",
+    description: "Вероятность, что напряжение быстро окрашивает речь в жёсткий тон.",
+    type: "core",
+  },
+  {
+    key: "dialogue-readiness",
+    blockId: "conflict-profile",
+    label: "Готовность обсуждать проблему",
+    shortLabel: "Диалог",
+    scientificLabel: "Dialogue readiness",
+    description: "Умение удерживать разговор в плоскости сути, а не взаимных атак.",
+    type: "core",
+  },
+  {
+    key: "repair-capacity",
+    blockId: "conflict-profile",
+    label: "Восстановление после конфликта",
+    shortLabel: "Восстановление",
+    scientificLabel: "Repair capacity",
+    description: "Готовность возвращаться к контакту и восстанавливать связь после напряжения.",
+    type: "core",
+  },
+  {
+    key: "engagement-vs-withdrawal",
+    blockId: "conflict-profile",
+    label: "Вовлечение / уход",
+    shortLabel: "Вовлечение",
+    scientificLabel: "Engagement versus withdrawal",
+    description:
+      "Сводный показатель того, насколько человек идёт в контакт по трудной теме, а не уходит от него.",
+    type: "derived",
+  },
+  {
+    key: "reactivity-level",
+    blockId: "conflict-profile",
+    label: "Реактивность",
+    shortLabel: "Реактивность",
+    scientificLabel: "Conflict reactivity",
+    description:
+      "Суммарная интенсивность защитности, резкости и накопленного напряжения в конфликте.",
+    type: "derived",
+  },
+  {
+    key: "repair-potential",
+    blockId: "conflict-profile",
+    label: "Потенциал восстановления",
+    shortLabel: "Потенциал восстановления",
+    scientificLabel: "Repair potential",
+    description:
+      "Сводный показатель готовности оставаться в разговоре и возвращаться к связи после конфликта.",
+    type: "derived",
+  },
+];
+
+function question(
+  itemId: string,
+  order: number,
+  russianText: string,
+  scaleKey: string,
+  scientificScale: string,
+) {
+  return {
+    blockId: "conflict-profile" as const,
+    itemId,
+    order,
+    originalText: russianText,
+    russianText,
+    scaleKey,
+    scientificScale,
+    reverseKeyed: false,
+    source: CONFLICT_SOURCE,
+  };
+}
+
+export const CONFLICT_PROFILE_BLOCK: BlockDefinition = {
+  id: "conflict-profile",
+  order: 3,
+  title: "Конфликтный профиль",
+  subtitle: "Внутренний прикладной модуль v1",
+  description:
+    "Небольшой исследовательский модуль, который фиксирует привычный ритм поведения в напряжённом разговоре.",
+  disclosure:
+    "Этот блок создан внутри продукта как прикладной модуль первой версии. Он не является валидированным академическим или клиническим тестом и используется только как прозрачное исследовательское описание паттернов.",
+  scales: CONFLICT_SCALES,
+  questions: [
+    question(
+      "cp-01",
+      1,
+      "Если напряжение нарастает, я скорее подниму тему прямо, чем буду ждать, пока всё уляжется само.",
+      "direct-confrontation",
+      "Direct confrontation",
+    ),
+    question(
+      "cp-02",
+      2,
+      "Когда разговор начинает накаляться, я стараюсь отложить его или уйти от него.",
+      "avoidance",
+      "Avoidance",
+    ),
+    question(
+      "cp-03",
+      3,
+      "Критика близкого человека быстро включает во мне желание оправдаться или защищаться.",
+      "defensiveness",
+      "Defensiveness",
+    ),
+    question(
+      "cp-04",
+      4,
+      "Во время конфликта я могу резко замолчать и закрыться, даже если тема важна.",
+      "silent-withdrawal",
+      "Silent withdrawal",
+    ),
+    question(
+      "cp-05",
+      5,
+      "Я могу долго копить раздражение, прежде чем сказать, что меня задело.",
+      "tension-accumulation",
+      "Tension accumulation",
+    ),
+    question(
+      "cp-06",
+      6,
+      "Когда мне больно или обидно, мои формулировки становятся жёсткими.",
+      "harshness",
+      "Harsh language",
+    ),
+    question(
+      "cp-07",
+      7,
+      "Даже в сложном разговоре я стараюсь обсуждать конкретную проблему, а не атаковать человека.",
+      "dialogue-readiness",
+      "Dialogue readiness",
+    ),
+    question(
+      "cp-08",
+      8,
+      "После конфликта мне обычно важно восстановить контакт, а не просто разойтись по углам.",
+      "repair-capacity",
+      "Repair capacity",
+    ),
+    question(
+      "cp-09",
+      9,
+      "Если тема принципиальна, я предпочитаю прояснить её сразу, даже ценой неприятного разговора.",
+      "direct-confrontation",
+      "Direct confrontation",
+    ),
+    question(
+      "cp-10",
+      10,
+      "Мне проще переждать неудобную тему, чем возвращаться к ней позже.",
+      "avoidance",
+      "Avoidance",
+    ),
+    question(
+      "cp-11",
+      11,
+      "Когда разговор становится неприятным, я часто сокращаю ответы до минимума или ухожу в молчание.",
+      "silent-withdrawal",
+      "Silent withdrawal",
+    ),
+    question(
+      "cp-12",
+      12,
+      "Даже после внешне законченного конфликта внутреннее напряжение у меня может держаться ещё долго.",
+      "tension-accumulation",
+      "Tension accumulation",
+    ),
+  ],
+};
