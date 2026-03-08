@@ -66,14 +66,20 @@ function ScaleCard({
   leftName: string;
   rightName: string;
 }) {
+  const emphasisClass =
+    title === "Сильные совпадения"
+      ? "text-cyan-300 drop-shadow-[0_0_8px_rgba(45,211,191,0.45)]"
+      : "text-orange-300 drop-shadow-[0_0_8px_rgba(255,123,84,0.4)]";
+
   return (
     <div className="dashboard-card rounded-[1.9rem] p-5">
-      <p className="section-kicker">
+      <p className={`section-kicker ${emphasisClass}`}>
         {title}
       </p>
+      <div className="glow-divider mt-4" />
       <div className="mt-4 space-y-4">
         {rows.map((row) => (
-          <div key={`${row.blockId}-${row.scaleKey}`} className="quiet-panel rounded-[1.45rem] p-4">
+          <div key={`${row.blockId}-${row.scaleKey}`} className="dashboard-card-soft rounded-[1.45rem] border border-white/10 bg-white/5 p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-base font-semibold tracking-tight text-foreground">{row.label}</p>
@@ -206,7 +212,7 @@ export function CompareWorkspace() {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="dashboard-card-strong rounded-[2.35rem] p-6 sm:p-7">
+        <div className="dashboard-card-strong rounded-[2.45rem] p-6 sm:p-7">
           <Badge className="status-chip shadow-none">
             Comparison
           </Badge>
@@ -220,7 +226,7 @@ export function CompareWorkspace() {
           </p>
         </div>
 
-        <div className="dashboard-card rounded-[2.35rem] p-6">
+        <div className="dashboard-card rounded-[2.45rem] p-6">
           <div className="grid gap-4 sm:grid-cols-2">
             {([
               ["left", leftProfile, "Левый профиль"],
@@ -279,13 +285,13 @@ export function CompareWorkspace() {
 
       {comparison ? (
         <>
-          <section className="dashboard-card-strong rounded-[2.5rem] p-6 sm:p-7">
+          <section className="dashboard-card-strong rounded-[2.55rem] p-6 sm:p-7">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
               <div>
                 <p className="section-kicker">
                   Overlay Analysis
                 </p>
-                <h2 className="mt-3 font-display text-4xl tracking-tight text-foreground">
+                <h2 className="text-gradient mt-3 font-display text-4xl tracking-tight">
                   {comparison.leftProfile.profileMeta.displayName} vs {comparison.rightProfile.profileMeta.displayName}
                 </h2>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
@@ -354,7 +360,14 @@ export function CompareWorkspace() {
                   <TabsContent key={blockId} value={blockId} className="space-y-6">
                     <div className="grid gap-6 xl:grid-cols-[0.82fr_1.16fr_0.82fr]">
                       {[comparison.leftProfile, comparison.rightProfile].map((profile, index) => (
-                        <div key={profile.profileMeta.id} className="dashboard-card rounded-[2rem] p-5">
+                        <div
+                          key={profile.profileMeta.id}
+                          className={`dashboard-card rounded-[2rem] p-5 ${
+                            index === 0
+                              ? "border-cyan-300/18 shadow-[0_0_24px_rgba(45,211,191,0.08)]"
+                              : "border-orange-300/18 shadow-[0_0_24px_rgba(255,123,84,0.08)]"
+                          }`}
+                        >
                           <p className="section-kicker">
                             {index === 0 ? "Left profile" : "Right profile"}
                           </p>
@@ -384,6 +397,8 @@ export function CompareWorkspace() {
                         centerValue="Overlay"
                         primaryLabel={comparison.leftProfile.profileMeta.displayName}
                         secondaryLabel={comparison.rightProfile.profileMeta.displayName}
+                        primaryStroke="#00E5FF"
+                        secondaryStroke="#FF7B54"
                       />
                     </div>
 
@@ -402,12 +417,13 @@ export function CompareWorkspace() {
                       />
 
                       <div className="dashboard-card rounded-[1.9rem] p-5">
-                        <p className="section-kicker">
+                        <p className="section-kicker text-orange-300 drop-shadow-[0_0_8px_rgba(255,123,84,0.4)]">
                           Potential friction points
                         </p>
+                        <div className="glow-divider mt-4" />
                         <div className="mt-4 space-y-4">
                           {responseRows.slice(0, 3).map((row) => (
-                            <div key={row.itemId} className="quiet-panel rounded-[1.4rem] p-4">
+                            <div key={row.itemId} className="dashboard-card-soft rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
                               <p className="text-sm font-medium tracking-tight text-foreground">
                                 {row.scaleKey}
                               </p>
@@ -420,12 +436,13 @@ export function CompareWorkspace() {
                       </div>
 
                       <div className="dashboard-card rounded-[1.9rem] p-5">
-                        <p className="section-kicker">
+                        <p className="section-kicker text-cyan-300 drop-shadow-[0_0_8px_rgba(45,211,191,0.45)]">
                           Communication prompts
                         </p>
+                        <div className="glow-divider mt-4" />
                         <div className="mt-4 space-y-4">
                           {prompts.map((prompt) => (
-                            <div key={prompt.key} className="quiet-panel rounded-[1.4rem] p-4 text-sm leading-7 text-muted-foreground">
+                            <div key={prompt.key} className="dashboard-card-soft rounded-[1.4rem] border border-white/10 bg-white/5 p-4 text-sm leading-7 text-muted-foreground">
                               {prompt.text}
                             </div>
                           ))}

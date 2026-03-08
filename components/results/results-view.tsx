@@ -57,7 +57,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-[0.82fr_1.18fr_0.86fr]">
-        <div className="dashboard-card-strong flex flex-col justify-between rounded-[2.3rem] p-6 sm:p-7">
+        <div className="dashboard-card-strong flex flex-col justify-between rounded-[2.5rem] p-6 sm:p-7">
           <div className="space-y-6">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="status-chip shadow-none">
@@ -75,7 +75,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
               <p className="section-kicker text-primary/70">
                 My Profile
               </p>
-              <h1 className="font-display text-5xl leading-[0.98] tracking-tight text-foreground">
+              <h1 className="text-gradient font-display text-5xl leading-[0.98] tracking-tight">
                 {profile.profileMeta.displayName}
               </h1>
               <p className="max-w-[32rem] text-base leading-8 text-foreground/86">
@@ -97,13 +97,14 @@ export function ResultsView({ profileId }: ResultsViewProps) {
           </div>
         </div>
 
-        <div className="dashboard-card-strong rounded-[2.4rem] p-5 sm:p-6">
+        <div className="dashboard-card-strong rounded-[2.5rem] p-5 sm:p-6">
           <div className="grid gap-6 lg:grid-cols-[0.7fr_1fr]">
             <div className="flex flex-col justify-between gap-6">
               <div>
                 <p className="section-kicker">
                   Big Five
                 </p>
+                <div className="glow-divider mt-4" />
                 <p className="mt-4 text-sm leading-7 text-muted-foreground">
                   Главная карта профиля: пять широких факторов, собранных в один
                   графический рисунок.
@@ -127,6 +128,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
               centerLabel="Profile Core"
               centerValue={profile.profileMeta.displayName}
               primaryLabel={profile.profileMeta.displayName}
+              primaryStroke="#00E5FF"
             />
           </div>
         </div>
@@ -136,9 +138,10 @@ export function ResultsView({ profileId }: ResultsViewProps) {
             <p className="section-kicker">
               Strengths
             </p>
+            <div className="glow-divider mt-4" />
             <div className="mt-4 space-y-4">
               {strongestTraits.map((trait) => (
-                <div key={trait.key} className="quiet-panel rounded-[1.4rem] p-4">
+                <div key={trait.key} className="dashboard-card-soft rounded-[1.45rem] border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-base font-semibold tracking-tight text-foreground">{trait.label}</p>
                     <Badge className="metric-chip shadow-none">
@@ -157,9 +160,10 @@ export function ResultsView({ profileId }: ResultsViewProps) {
             <p className="section-kicker">
               Zones of tension
             </p>
+            <div className="glow-divider mt-4" />
             <div className="mt-4 space-y-4">
               {quieterTraits.map((trait) => (
-                <div key={trait.key} className="quiet-panel rounded-[1.4rem] p-4">
+                <div key={trait.key} className="dashboard-card-soft rounded-[1.45rem] border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-base font-semibold tracking-tight text-foreground">{trait.label}</p>
                     <Badge className="metric-chip shadow-none">
@@ -177,13 +181,13 @@ export function ResultsView({ profileId }: ResultsViewProps) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="dashboard-card rounded-[2.3rem] p-6">
+        <div className="dashboard-card rounded-[2.4rem] p-6">
           <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
             <div className="space-y-4">
               <p className="section-kicker">
                 Interpersonal Style
               </p>
-              <h2 className="font-display text-3xl tracking-tight text-foreground">
+              <h2 className="text-gradient font-display text-3xl tracking-tight">
                 Как вы занимаете пространство рядом с другим человеком
               </h2>
               <p className="text-sm leading-7 text-muted-foreground">
@@ -216,19 +220,21 @@ export function ResultsView({ profileId }: ResultsViewProps) {
               centerLabel="IPC"
               centerValue="Style"
               primaryLabel="IPIP-IPC"
+              primaryStroke="#00E5FF"
             />
           </div>
         </div>
 
-        <div className="dashboard-card rounded-[2.3rem] p-6">
+        <div className="dashboard-card rounded-[2.4rem] p-6">
           <div className="space-y-5">
             <div>
               <p className="section-kicker">
                 Conflict Profile
               </p>
-              <h2 className="mt-3 font-display text-3xl tracking-tight text-foreground">
+              <h2 className="text-gradient mt-3 font-display text-3xl tracking-tight">
                 Напряжение, защита и восстановление
               </h2>
+              <div className="glow-divider mt-4" />
               <p className="mt-3 text-sm leading-7 text-muted-foreground">
                 {profile.textualInterpretation.blockSummaries["conflict-profile"]}
               </p>
@@ -253,6 +259,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
           <p className="section-kicker">
             Context
           </p>
+          <div className="glow-divider mt-4" />
           <div className="mt-4 flex flex-wrap gap-2">
             {profile.profileMeta.contexts.map((context) => (
               <Badge
@@ -272,6 +279,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
           <p className="section-kicker">
             Interpretation
           </p>
+          <div className="glow-divider mt-4" />
           <p className="mt-4 text-sm leading-7 text-muted-foreground">
             {profile.textualInterpretation.blockSummaries["big-five"]}
           </p>
@@ -284,6 +292,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
           <p className="section-kicker">
             Limits
           </p>
+          <div className="glow-divider mt-4" />
           <div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">
             {profile.textualInterpretation.disclaimers.map((note) => (
               <div key={note} className="quiet-panel rounded-[1.4rem] p-4">

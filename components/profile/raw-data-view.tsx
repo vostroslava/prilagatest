@@ -53,11 +53,11 @@ export function RawDataView({ profileId }: RawDataViewProps) {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        <div className="dashboard-card-strong rounded-[2.35rem] p-6 sm:p-7">
+        <div className="dashboard-card-strong rounded-[2.45rem] p-6 sm:p-7">
           <Badge className="status-chip shadow-none">
             Export
           </Badge>
-          <h1 className="mt-5 font-display text-5xl leading-[0.98] tracking-tight text-foreground">
+          <h1 className="text-gradient mt-5 font-display text-5xl leading-[0.98] tracking-tight">
             Сырые данные и полный пакет профиля
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-8 text-muted-foreground">
@@ -122,7 +122,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
               key={item.title}
               type="button"
               onClick={item.action}
-              className="dashboard-card rounded-[2rem] p-5 text-left transition-transform duration-300 hover:-translate-y-1"
+              className="dashboard-card-soft elevated-hover rounded-[2rem] border border-white/10 bg-white/5 p-5 text-left transition-transform duration-300 hover:-translate-y-1"
             >
               <p className="section-kicker">
                 Format
@@ -161,7 +161,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="overflow-x-auto">
-                <div className="quiet-panel overflow-hidden rounded-[1.6rem]">
+                <div className="dashboard-card-soft overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.04]">
                 <Table>
                   <TableHeader>
                     <TableRow>
