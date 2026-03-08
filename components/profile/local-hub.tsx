@@ -33,7 +33,16 @@ function useSyncSelection(profileIds: string[]) {
   const [selectedIds, setSelectedIds] = React.useState<string[]>(profileIds);
 
   React.useEffect(() => {
-    setSelectedIds(profileIds);
+    setSelectedIds((current) => {
+      if (
+        current.length === profileIds.length &&
+        current.every((value, index) => value === profileIds[index])
+      ) {
+        return current;
+      }
+
+      return profileIds;
+    });
   }, [profileIds]);
 
   const toggle = React.useCallback((profileId: string) => {
@@ -67,9 +76,11 @@ export function LocalHub() {
   } = useProfiles();
   const [message, setMessage] = React.useState("");
   const [error, setError] = React.useState("");
-  const { selectedIds, toggle } = useSyncSelection(
-    syncCandidates.map((profile) => profile.profileMeta.id),
+  const syncCandidateIds = React.useMemo(
+    () => syncCandidates.map((profile) => profile.profileMeta.id),
+    [syncCandidates],
   );
+  const { selectedIds, toggle } = useSyncSelection(syncCandidateIds);
 
   const focusProfile = currentProfile ?? profiles[0] ?? null;
   const heroRadarData = focusProfile
@@ -110,10 +121,10 @@ export function LocalHub() {
   return (
     <div className="space-y-8">
       {authStatus === "authenticated" && syncCandidates.length ? (
-        <section className="glass-panel rounded-[2.2rem] p-5 sm:p-6">
+        <section className="dashboard-card rounded-[2.2rem] p-5 sm:p-6">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
             <div className="max-w-3xl">
-              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+              <Badge className="status-chip shadow-none">
                 Guest → Account Sync
               </Badge>
               <h2 className="mt-4 font-display text-3xl tracking-tight text-foreground">
@@ -164,9 +175,9 @@ export function LocalHub() {
                   key={profile.profileMeta.id}
                   type="button"
                   onClick={() => toggle(profile.profileMeta.id)}
-                  className={`panel-inset rounded-[1.6rem] p-4 text-left transition ${
+                  className={`quiet-panel rounded-[1.6rem] p-4 text-left transition ${
                     selected
-                      ? "border-primary/40 shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_22%,transparent)]"
+                      ? "border-primary/40 bg-[var(--surface-control-active)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_22%,transparent)]"
                       : ""
                   }`}
                 >
@@ -191,23 +202,23 @@ export function LocalHub() {
         </section>
       ) : null}
 
-      <section className="grid gap-6 xl:grid-cols-[0.9fr_1.15fr_0.85fr]">
-        <div className="glass-panel flex flex-col justify-between rounded-[2.25rem] p-6 sm:p-7">
-          <div className="space-y-6">
+      <section className="grid gap-6 xl:grid-cols-[0.92fr_1.12fr_0.86fr]">
+        <div className="dashboard-card-strong flex flex-col justify-between rounded-[2.25rem] p-6 sm:p-7">
+          <div className="space-y-5">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+              <Badge className="status-chip shadow-none">
                 Local-first
               </Badge>
-              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+              <Badge className="status-chip shadow-none">
                 {authStatus === "authenticated" ? "Backup enabled" : "Guest mode"}
               </Badge>
             </div>
 
             <div className="space-y-4">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-primary/70">
-                Welcome back
+              <p className="section-kicker text-primary/70">
+                Главная
               </p>
-              <h1 className="font-display text-5xl leading-[0.98] tracking-tight text-foreground sm:text-6xl">
+              <h1 className="max-w-[12ch] font-display text-5xl leading-[0.98] tracking-tight text-foreground sm:text-6xl">
                 Готовы исследовать свой живой профиль?
               </h1>
               <p className="max-w-xl text-base leading-8 text-muted-foreground">
@@ -241,16 +252,16 @@ export function LocalHub() {
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="panel-inset rounded-[1.5rem] p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground/70">
+            <div className="quiet-panel rounded-[1.5rem] p-4">
+              <p className="section-kicker">
                 Полный экспорт
               </p>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">
                 JSON, Markdown и короткая сводка доступны из каждого профиля и в гостевом режиме, и после входа.
               </p>
             </div>
-            <div className="panel-inset rounded-[1.5rem] p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground/70">
+            <div className="quiet-panel rounded-[1.5rem] p-4">
+              <p className="section-kicker">
                 Ручной анализ
               </p>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">
@@ -260,11 +271,11 @@ export function LocalHub() {
           </div>
         </div>
 
-        <div className="glass-panel overflow-hidden rounded-[2.4rem] p-5 sm:p-6">
+        <div className="dashboard-card-strong overflow-hidden rounded-[2.4rem] p-5 sm:p-6">
           <div className="grid gap-6 lg:grid-cols-[0.72fr_1fr]">
             <div className="flex flex-col justify-between gap-5">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+                <p className="section-kicker">
                   My Personality Profile
                 </p>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground">
@@ -302,13 +313,13 @@ export function LocalHub() {
             const percent = progress ? Math.round(progress.completionRatio * 100) : 0;
 
             return (
-              <div key={block.id} className="glass-panel rounded-[2rem] p-5">
+              <div key={block.id} className="dashboard-card rounded-[2rem] p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground/65">
+                    <p className="section-kicker text-muted-foreground/80">
                       Модуль
                     </p>
-                    <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
+                    <h2 className="mt-2 text-lg font-semibold tracking-tight text-foreground">
                       {block.title}
                     </h2>
                     <p className="mt-2 text-sm leading-7 text-muted-foreground">
@@ -345,10 +356,10 @@ export function LocalHub() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="glass-panel rounded-[2.35rem] p-6 sm:p-7">
+        <div className="dashboard-card rounded-[2.35rem] p-6 sm:p-7">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+              <p className="section-kicker">
                 Profiles
               </p>
               <h2 className="mt-3 font-display text-3xl tracking-tight text-foreground">
@@ -360,7 +371,7 @@ export function LocalHub() {
                   : "Загружаем локальное хранилище…"}
               </p>
             </div>
-            <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-sm shadow-none">
+            <Badge className="metric-chip shadow-none">
               {profiles.length}
             </Badge>
           </div>
@@ -368,7 +379,7 @@ export function LocalHub() {
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             {profiles.length ? (
               profiles.map((profile) => (
-                <div key={profile.profileMeta.id} className="panel-inset rounded-[1.8rem] p-5">
+                <div key={profile.profileMeta.id} className="quiet-panel rounded-[1.8rem] p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xl font-semibold tracking-tight text-foreground">
@@ -377,7 +388,7 @@ export function LocalHub() {
                       <p className="mt-2 text-sm text-muted-foreground">
                         Обновлён {formatDate(profile.profileMeta.updatedAt)}
                       </p>
-                      <p className="mt-1 text-xs uppercase tracking-[0.22em] text-muted-foreground/70">
+                      <p className="section-kicker mt-1">
                         {syncStatusLabel(profile.syncMeta?.status)}
                       </p>
                     </div>
@@ -412,7 +423,7 @@ export function LocalHub() {
                 </div>
               ))
             ) : (
-              <div className="panel-inset rounded-[1.8rem] border-dashed p-8 text-center lg:col-span-2">
+              <div className="quiet-panel rounded-[1.8rem] border-dashed p-8 text-center lg:col-span-2">
                 <p className="font-display text-3xl tracking-tight text-foreground">
                   Пока нет ни одного профиля
                 </p>
@@ -429,13 +440,13 @@ export function LocalHub() {
         </div>
 
         <div className="space-y-4">
-          <div className="glass-panel rounded-[2rem] p-5">
+          <div className="dashboard-card rounded-[2rem] p-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-primary">
+              <div className="icon-well rounded-full">
                 <Upload className="size-4" />
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground/70">
+                <p className="section-kicker">
                   Import
                 </p>
                 <h3 className="text-xl font-semibold tracking-tight text-foreground">
@@ -447,20 +458,20 @@ export function LocalHub() {
               Поддерживается полный JSON-экспорт со шкалами, сырыми ответами и текстовыми
               интерпретациями.
             </p>
-            <label className="mt-5 flex cursor-pointer items-center justify-center gap-3 rounded-full border border-dashed border-white/12 bg-white/[0.03] px-4 py-4 text-sm text-muted-foreground transition-colors hover:border-white/22 hover:bg-white/[0.06] hover:text-foreground">
+            <label className="shell-control mt-5 flex h-11 w-full cursor-pointer justify-center gap-3 rounded-full border-dashed px-4 text-sm text-muted-foreground transition-colors hover:text-foreground">
               <Upload className="size-4" />
               Импортировать JSON
               <input type="file" accept=".json,application/json" className="hidden" onChange={handleImport} />
             </label>
           </div>
 
-          <div className="glass-panel rounded-[2rem] p-5">
+          <div className="dashboard-card rounded-[2rem] p-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-primary">
+              <div className="icon-well rounded-full">
                 <FileJson className="size-4" />
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground/70">
+                <p className="section-kicker">
                   Export
                 </p>
                 <h3 className="text-xl font-semibold tracking-tight text-foreground">
@@ -469,7 +480,7 @@ export function LocalHub() {
               </div>
             </div>
             <div className="mt-4 space-y-3">
-              <div className="panel-inset rounded-[1.4rem] p-4 text-sm leading-7 text-muted-foreground">
+              <div className="quiet-panel rounded-[1.4rem] p-4 text-sm leading-7 text-muted-foreground">
                 `profileMeta`, `rawAnswers`, `scoring`, `derivedScores`, `textualInterpretation`,
                 `scaleDefinitions`, `versionInfo`.
               </div>
@@ -493,13 +504,13 @@ export function LocalHub() {
             </div>
           </div>
 
-          <div className="glass-panel rounded-[2rem] p-5">
+          <div className="dashboard-card rounded-[2rem] p-5">
             <div className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-primary">
+              <div className="icon-well rounded-full">
                 <Sparkles className="size-4" />
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground/70">
+                <p className="section-kicker">
                   Notes
                 </p>
                 <h3 className="text-xl font-semibold tracking-tight text-foreground">

@@ -12,18 +12,13 @@ interface LikertScaleProps {
 
 export function LikertScale({ value, onChange, disabled = false }: LikertScaleProps) {
   return (
-    <div className="w-full space-y-6">
-      <div className="flex items-center justify-between px-1 text-[11px] uppercase tracking-[0.24em] font-medium text-muted-foreground">
-        <span>Совсем не похоже</span>
-        <span>Очень похоже</span>
+    <div className="w-full space-y-4">
+      <div className="flex items-center justify-between px-1 text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
+        <span>Совсем не про меня</span>
+        <span>Точно про меня</span>
       </div>
 
-      <div
-        className={cn(
-          "panel-inset-strong grid w-full grid-cols-5 gap-2 rounded-[2rem] p-2.5 sm:p-3",
-          disabled && "pointer-events-none opacity-65"
-        )}
-      >
+      <div className={cn("space-y-3", disabled && "pointer-events-none opacity-65")}>
         {STANDARD_LIKERT_OPTIONS.map((option) => {
           const active = option.value === value;
 
@@ -35,43 +30,23 @@ export function LikertScale({ value, onChange, disabled = false }: LikertScalePr
               disabled={disabled}
               onClick={() => onChange(option.value)}
               className={cn(
-                "group relative flex min-h-28 flex-col items-center justify-between rounded-[1.5rem] border px-3 py-3 text-center outline-none transition-all duration-200 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-32 sm:px-4 sm:py-4",
+                "group relative flex min-h-[4.35rem] w-full items-center justify-center overflow-hidden rounded-[1.45rem] border px-6 py-4 text-center outline-none transition-all duration-200 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:min-h-[4.65rem]",
                 active
-                  ? "border-primary/40 bg-primary/12 text-foreground ring-1 ring-primary/35 shadow-[0_14px_36px_var(--surface-glow)]"
-                  : "border-[color:var(--surface-border)] bg-[var(--surface-control)] text-muted-foreground hover:border-[color:var(--surface-border-strong)] hover:bg-[var(--surface-control-hover)] hover:text-foreground"
+                  ? "border-primary/40 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--primary)_14%,transparent),color-mix(in_srgb,var(--primary)_20%,transparent),color-mix(in_srgb,var(--primary)_30%,transparent))] text-foreground ring-1 ring-primary/35 shadow-[0_16px_34px_var(--surface-glow)]"
+                  : "border-[color:var(--surface-border)] bg-[var(--surface-control)] text-foreground/90 hover:-translate-y-0.5 hover:border-[color:var(--surface-border-strong)] hover:bg-[var(--surface-control-hover)] hover:text-foreground"
               )}
             >
-              <div className="flex w-full flex-col items-center gap-3">
-                <span
-                  className={cn(
-                    "flex size-8 items-center justify-center rounded-full border text-sm font-semibold transition-all",
-                    active
-                      ? "border-primary/40 bg-primary/18 text-primary"
-                      : "border-[color:var(--surface-border)] bg-[var(--surface-inset)] text-foreground/78",
-                  )}
-                >
-                  {option.label}
-                </span>
-                <div
-                  className={cn(
-                    "size-2.5 rounded-full transition-all duration-200",
-                    active
-                      ? "bg-primary shadow-[0_0_12px_currentColor]"
-                      : "bg-muted-foreground/40 group-hover:bg-primary/50",
-                  )}
-                />
-              </div>
+              <div className="absolute inset-y-0 left-0 w-24 bg-[radial-gradient(circle_at_left,rgba(89,241,213,0.14),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-aria-pressed:opacity-100" />
+              <div className="absolute inset-y-0 right-0 w-28 bg-[radial-gradient(circle_at_right,rgba(89,241,213,0.2),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-aria-pressed:opacity-100" />
 
-              <div className="mt-4 flex w-full flex-1 items-end justify-center">
-                <span
-                  className={cn(
-                    "text-sm leading-5 transition-colors",
-                    active ? "text-foreground" : "text-muted-foreground group-hover:text-foreground/90",
-                  )}
-                >
-                  {option.description}
-                </span>
-              </div>
+              <span
+                className={cn(
+                  "relative text-[1.15rem] tracking-tight transition-colors sm:text-[1.5rem]",
+                  active ? "text-foreground" : "text-foreground/88 group-hover:text-foreground",
+                )}
+              >
+                {option.description}
+              </span>
             </button>
           );
         })}

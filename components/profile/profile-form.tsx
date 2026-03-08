@@ -66,13 +66,13 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.12fr_0.88fr]">
-      <Card className="glass-panel rounded-[2.4rem] border-[color:var(--surface-border)]">
+      <Card className="dashboard-card-strong rounded-[2.4rem] border-[color:var(--surface-border)]">
         <CardHeader className="space-y-5">
           <div className="flex flex-wrap gap-2">
-            <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+            <Badge className="status-chip shadow-none">
               {profile ? "Edit profile" : "Create profile"}
             </Badge>
-            <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+            <Badge className="status-chip shadow-none">
               {authStatus === "authenticated" ? "sync on create" : "local-only"}
             </Badge>
           </div>
@@ -116,17 +116,17 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                           key={option.key}
                           type="button"
                           className={cn(
-                            "rounded-[1.5rem] border px-4 py-4 text-left transition-all duration-300",
+                            "quiet-panel rounded-[1.5rem] border px-4 py-4 text-left transition-all duration-300",
                             active
-                              ? "border-primary/35 bg-primary/10 shadow-[0_0_24px_var(--surface-glow)]"
-                              : "panel-inset hover:border-[color:var(--surface-border-strong)]",
+                              ? "border-primary/35 bg-[var(--surface-control-active)] shadow-[0_0_24px_var(--surface-glow)]"
+                              : "hover:border-[color:var(--surface-border-strong)]",
                           )}
                           onClick={() => toggleContext(option.key)}
                         >
                           <div className="flex items-center justify-between gap-3">
                             <span className="text-sm font-medium text-foreground">{option.label}</span>
                             {active ? (
-                              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 shadow-none">
+                              <Badge className="status-chip px-3 shadow-none">
                                 active
                               </Badge>
                             ) : null}
@@ -172,7 +172,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="glass-panel rounded-[2.4rem] border-[color:var(--surface-border)]">
+      <Card className="dashboard-card rounded-[2.4rem] border-[color:var(--surface-border)]">
         <CardHeader>
           <CardTitle className="font-display text-3xl tracking-tight">
             Что сохранится в пакете профиля
@@ -192,7 +192,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           ].map((item, index) => (
             <div
               key={item}
-              className="panel-inset rounded-[1.5rem] p-4 text-sm leading-7 text-muted-foreground"
+              className="quiet-panel rounded-[1.5rem] p-4 text-sm leading-7 text-muted-foreground"
             >
               <span className="mr-3 font-semibold text-foreground/85">{index + 1}.</span>
               {item}

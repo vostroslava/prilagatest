@@ -22,7 +22,7 @@ export function ProfileSwitcher() {
         asChild
         size="icon-sm"
         variant="ghost"
-        className="control-surface rounded-full text-muted-foreground hover:text-foreground"
+        className="shell-control shell-control-icon rounded-full text-muted-foreground hover:text-foreground"
       >
         <Link href="/profiles/new" aria-label="Создать профиль">
           <Plus className="size-4" />
@@ -37,7 +37,7 @@ export function ProfileSwitcher() {
         value={currentProfileId ?? undefined}
         onValueChange={(value) => setCurrentProfileId(String(value))}
       >
-        <SelectTrigger className="h-10 min-w-[190px] rounded-full px-3 text-sm shadow-none">
+        <SelectTrigger className="min-w-[208px] rounded-full px-3.5 text-sm shadow-none">
           <span className="truncate">
             {currentProfile?.profileMeta.displayName ?? "Выберите профиль"}
           </span>
@@ -61,7 +61,7 @@ export function ProfileSwitcher() {
           asChild
           size="icon-sm"
           variant="ghost"
-          className="control-surface rounded-full text-muted-foreground hover:text-foreground"
+          className="shell-control shell-control-icon rounded-full text-muted-foreground hover:text-foreground"
         >
           <Link href={`/profiles/${currentProfileId}/tests`} aria-label="Продолжить тест">
             <ChevronRight className="size-4" />

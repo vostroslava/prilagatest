@@ -127,7 +127,7 @@ export function TestRunner({ profileId }: TestRunnerProps) {
 
   if (!profile) {
     return (
-      <Card className="glass-panel border-white/10">
+      <Card className="glass-panel border-[color:var(--surface-border)]">
         <CardHeader>
           <CardTitle>Профиль не найден</CardTitle>
           <CardDescription>
@@ -166,7 +166,7 @@ export function TestRunner({ profileId }: TestRunnerProps) {
 
   if (!currentResponse) {
     return (
-      <Card className="glass-panel border-white/10">
+      <Card className="glass-panel border-[color:var(--surface-border)]">
         <CardHeader>
           <CardTitle>Не удалось открыть текущий вопрос</CardTitle>
           <CardDescription>
@@ -187,10 +187,6 @@ export function TestRunner({ profileId }: TestRunnerProps) {
   const absoluteQuestionIndex = getAbsoluteQuestionIndex(currentBlock.id, currentIndex);
   const nextLocation = getNextLocation(currentBlock.id, currentIndex);
   const previousLocation = getPreviousLocation(currentBlock.id, currentIndex);
-  const upcomingBlock = nextLocation ? getBlockById(nextLocation.blockId) : null;
-  const isCrossingToNextBlock =
-    nextLocation !== null && nextLocation.blockId !== currentBlock.id;
-  const remainingInBlock = Math.max(currentResponses.length - currentIndex - 1, 0);
 
   async function jumpToLocation(location: QuestionLocation) {
     setActiveBlockId(location.blockId);
@@ -271,159 +267,171 @@ export function TestRunner({ profileId }: TestRunnerProps) {
   );
 
   return (
-    <div className="relative grid min-h-[100dvh] bg-background xl:grid-cols-[300px_minmax(0,1fr)]">
-      <div className="fixed left-0 right-0 top-0 z-50 h-1" style={{ background: "var(--progress-track)" }}>
-        <div
-          className="h-full transition-all duration-700 ease-out shadow-[0_0_16px_var(--surface-glow)]"
-          style={{ background: "var(--progress-fill)", width: `${overallProgress}%` }}
-          aria-label={completionLabel(overallTotal ? overallAnswered / overallTotal : 0)}
-        />
-      </div>
+    <div className="relative min-h-[100dvh] bg-background px-3 py-3 sm:px-4 sm:py-4">
+      <div className="dashboard-shell relative flex min-h-[calc(100dvh-1.5rem)] flex-col rounded-[2.25rem] sm:min-h-[calc(100dvh-2rem)]">
+        <div className="absolute inset-x-0 top-0 z-20 h-px bg-[linear-gradient(90deg,transparent,var(--shell-line),transparent)]" />
 
-      <aside className="hidden border-r border-[color:var(--surface-border)] bg-[var(--surface-panel-strong)] xl:flex xl:flex-col">
-        <div className="flex h-full flex-col px-6 py-8">
-          <div className="space-y-4">
-            <Badge className="w-fit rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
-              Test Flow
-            </Badge>
+        <header className="relative z-10 flex items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <div className="shell-control shell-control-icon glow-pill rounded-2xl text-primary">
+              <Sparkles className="size-4" />
+            </div>
             <div>
-              <p className="font-display text-3xl tracking-tight text-foreground">
+              <p className="font-display text-2xl tracking-tight text-foreground">Тесты</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                 {profile.profileMeta.displayName}
               </p>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                {completionLabel(overallTotal ? overallAnswered / overallTotal : 0)} · {overallAnswered} из {overallTotal}
-              </p>
             </div>
           </div>
 
-          <div className="mt-8 space-y-3">
-            {TEST_BLOCKS.map((block) => {
-              const progress = profile.assessmentProgress[block.id];
-              const active = block.id === currentBlock.id;
-
-              return (
-                <div
-                  key={block.id}
-                  className={cn(
-                    "rounded-[1.6rem] p-4 transition-all",
-                    active ? "panel-inset-strong" : "panel-inset",
-                    active && "shadow-[0_18px_44px_var(--surface-glow)]",
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-                        Блок {block.order}
-                      </p>
-                      <p className="mt-2 text-base font-semibold tracking-tight text-foreground">
-                        {block.title}
-                      </p>
-                    </div>
-                    {progress.status === "completed" ? (
-                      <CheckCircle2 className="mt-1 size-4 text-primary" />
-                    ) : null}
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{statusLabel(progress.status)}</p>
-                  <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ background: "var(--progress-track)" }}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        background: progress.status === "not-started" ? "var(--progress-fill-muted)" : "var(--progress-fill)",
-                        width: `${progress.completionRatio * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="hidden h-10 rounded-full px-4 sm:inline-flex"
+              asChild
+            >
+              <Link href={`/profiles/${profile.profileMeta.id}/results`}>
+                Приостановить
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              className="size-10 rounded-full px-0"
+              aria-label="Прервать тест"
+              asChild
+            >
+              <Link href={`/profiles/${profile.profileMeta.id}/results`}>
+                <X className="size-4" />
+              </Link>
+            </Button>
           </div>
-
-          <div className="panel-inset mt-auto rounded-[1.6rem] p-4">
-            <div className="inline-flex items-center gap-2 text-xs font-medium text-primary">
-              <Sparkles className="size-3.5" />
-              {isCrossingToNextBlock
-                ? `Дальше откроется ${upcomingBlock?.title.toLowerCase()}`
-                : remainingInBlock > 0
-                  ? `В этом блоке осталось ${remainingInBlock}`
-                  : "Последний вопрос перед итогом"}
-            </div>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              Ответы сохраняются сразу. Вы в любой момент можете выйти и вернуться позже.
-            </p>
-          </div>
-        </div>
-      </aside>
-
-      <div className="relative flex min-h-[100dvh] flex-col">
-        <header className="flex items-center justify-between px-5 py-5 sm:px-6 lg:px-12">
-          <div className="min-w-0">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              {blockLabel(currentBlock.id)}
-            </p>
-            <p className="mt-1 text-sm text-foreground/82">
-              Вопрос {absoluteQuestionIndex + 1} из {overallTotal}
-            </p>
-          </div>
-
-          <Button
-            asChild
-            variant="outline"
-            className="size-11 rounded-full px-0"
-            aria-label="Прервать тест"
-          >
-            <Link href={`/profiles/${profile.profileMeta.id}/results`}>
-              <X className="size-4" />
-            </Link>
-          </Button>
         </header>
 
-        <div className="flex flex-1 items-center justify-center px-4 py-8 sm:px-8 lg:px-12">
-          <div
-            className="panel-strong w-full max-w-5xl rounded-[2.6rem] p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 sm:p-8"
-          >
-            <div className={cn("mx-auto flex max-w-4xl flex-col items-center text-center", questionMotionClass)}>
-              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.26em] text-muted-foreground shadow-none">
-                {blockLabel(currentBlock.id)} · {questionPositionInBlock}/{currentProgress.total}
-              </Badge>
+        <div className="relative flex flex-1 flex-col overflow-hidden rounded-[2rem] border-t border-[color:var(--surface-border)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(91,241,213,0.12),transparent_34%),radial-gradient(circle_at_50%_18%,rgba(91,241,213,0.08),transparent_42%)]" />
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[52%] -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(91,241,213,0.16),transparent_48%)] blur-2xl" />
 
-              <h1 className="mt-8 font-display text-5xl leading-[1.02] tracking-tight text-foreground balance-text sm:text-6xl lg:text-[4.8rem]">
-                {currentResponse.russianText}
-              </h1>
-
-              <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
-                Выберите степень согласия, и следующий вопрос откроется автоматически.
-              </p>
-
-              <div className="mt-10 w-full">
-                <LikertScale
-                  value={currentResponse.answer}
-                  disabled={isAdvancing}
-                  onChange={(answer) => void handleAnswer(answer)}
-                />
+          <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-between px-4 pb-6 pt-6 sm:px-6 lg:px-10 lg:pt-10">
+            <div className="space-y-7">
+              <div className="space-y-3 text-center">
+                <p className="text-base tracking-tight text-foreground/82 sm:text-[1.4rem]">
+                  Вопрос {absoluteQuestionIndex + 1} из {overallTotal}
+                </p>
+                <div className="mx-auto h-1 w-full max-w-xl overflow-hidden rounded-full bg-[var(--progress-track)]">
+                  <div
+                    className="h-full rounded-full shadow-[0_0_16px_var(--surface-glow)]"
+                    style={{
+                      background: "var(--progress-fill)",
+                      width: `${overallProgress}%`,
+                    }}
+                    aria-label={completionLabel(overallTotal ? overallAnswered / overallTotal : 0)}
+                  />
+                </div>
               </div>
 
-              <div className="mt-8 flex w-full flex-col gap-4 border-t border-[color:var(--surface-divider)] pt-5 sm:flex-row sm:items-center sm:justify-between">
-                <Button
-                  variant="outline"
-                  className="rounded-full px-5"
-                  disabled={!previousLocation}
-                  onClick={() => void handleBack()}
-                >
-                  <ArrowLeft className="size-4" />
-                  Назад
-                </Button>
+              <div className={cn("mx-auto flex max-w-[52rem] flex-col items-center text-center", questionMotionClass)}>
+                <Badge className="status-chip shadow-none">
+                  {blockLabel(currentBlock.id)} · {questionPositionInBlock}/{currentProgress.total}
+                </Badge>
 
-                <p className="text-sm text-muted-foreground">
-                  {currentProgress.answered}/{currentProgress.total} ответов в этом блоке
+                <h2 className="mt-6 text-[1.85rem] font-semibold tracking-tight text-primary sm:text-[2.05rem]">
+                  {currentBlock.title}
+                </h2>
+
+                <h1 className="mt-6 max-w-[14ch] font-display text-[2.55rem] leading-[1.04] tracking-tight text-foreground balance-text sm:text-5xl lg:text-[4.35rem]">
+                  {currentResponse.russianText}
+                </h1>
+
+                <div className="mt-5 flex items-center gap-2">
+                  <span className="size-1.5 rounded-full bg-primary/80 shadow-[0_0_10px_var(--surface-glow)]" />
+                  <span className="size-1.5 rounded-full bg-primary/45" />
+                  <span className="size-1.5 rounded-full bg-primary/25" />
+                </div>
+
+                <div className="mt-9 w-full max-w-[32rem]">
+                  <LikertScale
+                    value={currentResponse.answer}
+                    disabled={isAdvancing}
+                    onChange={(answer) => void handleAnswer(answer)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 mt-8 space-y-5">
+              <div className="glow-divider" />
+
+              <div className="flex flex-col items-center gap-4 text-center">
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Button
+                    variant="outline"
+                    className="h-10 rounded-full px-5"
+                    disabled={!previousLocation}
+                    onClick={() => void handleBack()}
+                  >
+                    <ArrowLeft className="size-4" />
+                    Назад
+                  </Button>
+                  <p className="text-base tracking-tight text-foreground/88">
+                    {currentProgress.answered} / {currentProgress.total}
+                  </p>
+                  <Badge className="status-chip shadow-none">
+                    {statusLabel(currentProgress.status)}
+                  </Badge>
+                </div>
+
+                <div className="grid w-full gap-3 lg:grid-cols-3">
+                  {TEST_BLOCKS.map((block) => {
+                    const progress = profile.assessmentProgress[block.id];
+                    const active = block.id === currentBlock.id;
+
+                    return (
+                      <div
+                        key={block.id}
+                        className={cn(
+                          "rounded-[1.35rem] border px-4 py-3 text-left transition-all",
+                          active
+                            ? "quiet-panel border-primary/25 bg-[var(--surface-control-active)]"
+                            : "quiet-panel",
+                        )}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="section-kicker text-muted-foreground/80">
+                              Блок {block.order}
+                            </p>
+                            <p className="mt-1 text-base font-semibold tracking-tight text-foreground">
+                              {block.title}
+                            </p>
+                          </div>
+                          {progress.status === "completed" ? (
+                            <CheckCircle2 className="mt-1 size-4 text-primary" />
+                          ) : null}
+                        </div>
+                        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--progress-track)]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              background:
+                                progress.status === "not-started"
+                                  ? "var(--progress-fill-muted)"
+                                  : "var(--progress-fill)",
+                              width: `${progress.completionRatio * 100}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground/78">
+                  {currentResponse.itemId} · {currentResponse.scaleKey}
+                  {currentResponse.reverseKeyed ? " · reverse" : ""}
+                  {" · "}
+                  {currentResponse.source.instrumentId}
                 </p>
               </div>
-
-              <p className="mt-4 text-[11px] uppercase tracking-[0.24em] text-muted-foreground/80">
-                {currentResponse.itemId} · {currentResponse.scaleKey}
-                {currentResponse.reverseKeyed ? " · reverse" : ""}
-                {" · "}
-                {currentResponse.source.instrumentId}
-              </p>
             </div>
           </div>
         </div>

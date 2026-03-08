@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -25,59 +24,112 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        icon: "size-8",
+          "h-10 gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+        xs: "h-7 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-9 gap-1 rounded-[min(var(--radius-md),12px)] px-3 text-[0.82rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-11 gap-1.5 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        icon: "size-10",
         "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
+          "size-7 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
         "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
+          "size-9 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
+        "icon-lg": "size-11",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
     },
-  }
-)
+  },
+);
 
-function Button({
-  asChild = false,
-  className,
-  variant = "default",
-  size = "default",
-  children,
-  ...props
-}: ButtonPrimitive.Props &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const classes = cn(buttonVariants({ variant, size, className }))
+type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-  if (asChild) {
-    return (
-      <ButtonPrimitive
-        data-slot="button"
-        className={classes}
-        nativeButton={false}
-        render={children as React.ReactElement}
-        {...props}
-      />
-    )
-  }
-
-  return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={classes}
-      {...props}
-    >
-      {children}
-    </ButtonPrimitive>
-  )
+interface ButtonProps extends NativeButtonProps, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
 }
 
-export { Button, buttonVariants }
+function composeChildClick(
+  childHandler: React.MouseEventHandler<HTMLElement> | undefined,
+  ownHandler: React.MouseEventHandler<HTMLElement> | undefined,
+  disabled: boolean,
+) {
+  return (event: React.MouseEvent<HTMLElement>) => {
+    childHandler?.(event);
+
+    if (event.defaultPrevented) {
+      return;
+    }
+
+    if (disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    ownHandler?.(event);
+  };
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      asChild = false,
+      className,
+      variant = "default",
+      size = "default",
+      children,
+      disabled = false,
+      onClick,
+      type,
+      ...props
+    },
+    ref,
+  ) => {
+    const classes = cn(buttonVariants({ variant, size, className }));
+
+    if (asChild) {
+      if (!React.isValidElement(children)) {
+        return null;
+      }
+
+      const child = children as React.ReactElement<Record<string, unknown>>;
+      const childClassName =
+        typeof child.props.className === "string" ? child.props.className : undefined;
+      const childOnClick =
+        typeof child.props.onClick === "function"
+          ? (child.props.onClick as React.MouseEventHandler<HTMLElement>)
+          : undefined;
+
+      return React.cloneElement(child, {
+        ...props,
+        "data-slot": "button",
+        "aria-disabled": disabled || undefined,
+        className: cn(classes, childClassName),
+        onClick: composeChildClick(
+          childOnClick,
+          onClick as React.MouseEventHandler<HTMLElement> | undefined,
+          disabled,
+        ),
+      });
+    }
+
+    return (
+      <button
+        ref={ref}
+        data-slot="button"
+        className={classes}
+        disabled={disabled}
+        onClick={onClick}
+        type={type ?? "button"}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  },
+);
+
+Button.displayName = "Button";
+
+export { Button, buttonVariants };

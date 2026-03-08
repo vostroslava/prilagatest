@@ -41,7 +41,7 @@ interface ChartVertex {
 const VIEWBOX_SIZE = 100;
 const CHART_CENTER = 50;
 const OUTER_RADIUS = 30;
-const LABEL_RADIUS = 40;
+const LABEL_RADIUS = 41.5;
 const GRID_LEVELS = 5;
 
 function clampPercent(value: number) {
@@ -143,7 +143,7 @@ export function ProfileRadar({
       )}
       style={{ height }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,var(--surface-glow),transparent_28%),radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.05),transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,var(--surface-glow),transparent_28%),radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.04),transparent_50%)]" />
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl"
         style={{ background: "var(--hero-orb)" }}
@@ -233,17 +233,10 @@ export function ProfileRadar({
                 key={`primary-dot-${vertex.label}`}
                 cx={vertex.primaryPosition.x}
                 cy={vertex.primaryPosition.y}
-                r="0.95"
+                r="0.88"
                 fill={primaryStroke}
                 filter={`url(#radar-glow-${token})`}
-              >
-                <title>
-                  {vertex.label}: {primaryLabel} {vertex.value}
-                  {secondaryLabel && vertex.secondaryValue !== null
-                    ? `, ${secondaryLabel} ${vertex.secondaryValue}`
-                    : ""}
-                </title>
-              </circle>
+              />
             ))}
           </svg>
         ) : (
@@ -266,7 +259,7 @@ export function ProfileRadar({
           {vertices.map((vertex) => (
             <div
               key={`label-${vertex.label}`}
-              className="absolute max-w-[7rem] -translate-x-1/2 -translate-y-1/2 px-2 text-center text-[11px] font-medium leading-4 text-[color:var(--radar-label)] sm:text-xs"
+              className="absolute max-w-[6.5rem] -translate-x-1/2 -translate-y-1/2 px-2 text-center text-[10px] font-medium leading-4 text-[color:var(--radar-label)] sm:text-[11px]"
               style={{
                 left: `${vertex.labelPosition.x}%`,
                 top: `${vertex.labelPosition.y}%`,
@@ -280,7 +273,7 @@ export function ProfileRadar({
 
       {centerLabel || centerValue ? (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="rounded-full border border-[color:var(--surface-border-strong)] bg-[var(--surface-control)] px-5 py-3 text-center shadow-[0_0_60px_var(--surface-glow)] backdrop-blur-xl">
+          <div className="quiet-panel rounded-full border-[color:var(--surface-border-strong)] px-5 py-3 text-center shadow-[0_0_46px_var(--surface-glow)] backdrop-blur-xl">
             {centerValue ? (
               <div className="text-2xl font-semibold tracking-tight text-foreground">
                 {centerValue}

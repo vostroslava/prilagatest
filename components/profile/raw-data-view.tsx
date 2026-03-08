@@ -53,8 +53,8 @@ export function RawDataView({ profileId }: RawDataViewProps) {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        <div className="glass-panel rounded-[2.35rem] p-6 sm:p-7">
-          <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+        <div className="dashboard-card-strong rounded-[2.35rem] p-6 sm:p-7">
+          <Badge className="status-chip shadow-none">
             Export
           </Badge>
           <h1 className="mt-5 font-display text-5xl leading-[0.98] tracking-tight text-foreground">
@@ -122,9 +122,9 @@ export function RawDataView({ profileId }: RawDataViewProps) {
               key={item.title}
               type="button"
               onClick={item.action}
-              className="glass-panel rounded-[2rem] p-5 text-left transition-transform duration-300 hover:-translate-y-1"
+              className="dashboard-card rounded-[2rem] p-5 text-left transition-transform duration-300 hover:-translate-y-1"
             >
-              <p className="text-[11px] uppercase tracking-[0.26em] text-muted-foreground/70">
+              <p className="section-kicker">
                 Format
               </p>
               <h2 className="mt-4 font-display text-3xl tracking-tight text-foreground">
@@ -139,7 +139,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
       </section>
 
       <Tabs defaultValue="big-five" className="space-y-6">
-        <TabsList className="w-full flex-wrap rounded-[1.6rem] border border-white/8 bg-white/[0.03] p-2">
+        <TabsList className="dashboard-card w-full flex-wrap rounded-[1.6rem] p-2">
           <TabsTrigger value="big-five" className="rounded-full px-5">
             Большая пятёрка
           </TabsTrigger>
@@ -153,7 +153,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
 
         {(["big-five", "ipip-ipc", "conflict-profile"] as const).map((blockId) => (
           <TabsContent key={blockId} value={blockId}>
-            <Card className="glass-panel rounded-[2.2rem] border-[color:var(--surface-border)]">
+            <Card className="dashboard-card rounded-[2.2rem] border-[color:var(--surface-border)]">
               <CardHeader>
                 <CardTitle className="font-display text-3xl tracking-tight">{blockId}</CardTitle>
                 <CardDescription>
@@ -161,6 +161,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="overflow-x-auto">
+                <div className="quiet-panel overflow-hidden rounded-[1.6rem]">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -191,6 +192,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

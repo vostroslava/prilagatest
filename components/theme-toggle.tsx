@@ -19,7 +19,7 @@ export function ThemeToggle() {
       <Button
         variant="ghost"
         size="icon-sm"
-        className="control-surface rounded-full"
+        className="shell-control shell-control-icon rounded-full"
         disabled
       >
         <MoonStar className="size-4" />
@@ -33,7 +33,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon-sm"
-      className="control-surface rounded-full text-muted-foreground hover:text-foreground"
+      className="shell-control shell-control-icon rounded-full text-muted-foreground hover:text-foreground"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Переключить тему"
     >

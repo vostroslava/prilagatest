@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Command, LogOut, Search } from "lucide-react";
+import { Bell, Command, LogOut, Search } from "lucide-react";
 
 import { ProfileSwitcher } from "@/components/profile/profile-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -62,35 +62,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="relative min-h-screen">
       {!isTestRunner ? (
         <header className="fixed inset-x-0 top-4 z-50 px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="glass-panel rounded-[2rem] px-4 py-3">
+          <div className="mx-auto max-w-[1380px]">
+            <div className="dashboard-shell rounded-[2rem] px-4 py-3.5 sm:px-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex min-w-0 items-center gap-3">
                   <Link
                     href="/"
-                    className="control-surface flex size-11 items-center justify-center rounded-full text-primary shadow-[0_0_24px_var(--surface-glow)]"
+                    className="shell-control shell-control-icon glow-pill text-primary"
                   >
                     <Command className="size-4" />
                   </Link>
                   <div className="min-w-0">
-                    <p className="font-display text-xl tracking-tight text-foreground">Личный профиль</p>
+                    <p className="font-display text-xl tracking-tight text-foreground">
+                      Личный профиль
+                    </p>
                     <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-                      Analytical Zen
+                      Профиль · Тесты · Самопонимание
                     </p>
                   </div>
                 </div>
 
-                <nav className="hidden items-center gap-2 lg:flex">
+                <nav className="hidden items-center gap-1.5 lg:flex">
                   {navItems.map((item) => (
                     <Link
                       key={item.key}
                       href={item.href}
-                      className={cn(
-                        "rounded-full px-4 py-2 text-[13px] font-medium tracking-wide transition-all duration-300",
-                        item.active
-                          ? "border border-primary/25 bg-primary/12 text-foreground shadow-[0_12px_28px_var(--surface-glow)]"
-                          : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
-                      )}
+                      className="shell-control shell-tab"
+                      aria-current={item.active ? "page" : undefined}
+                      data-active={item.active ? "true" : undefined}
                     >
                       {item.label}
                     </Link>
@@ -100,15 +99,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <div className="flex items-center gap-2">
                   <Link
                     href="/compare"
-                    className="control-surface flex size-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+                    className="shell-control shell-control-icon text-muted-foreground hover:text-foreground"
                     aria-label="Открыть сравнение"
                   >
                     <Search className="size-4" />
                   </Link>
+                  <button
+                    type="button"
+                    className="shell-control shell-control-icon hidden text-muted-foreground hover:text-foreground lg:flex"
+                    aria-label="Уведомления"
+                  >
+                    <Bell className="size-4" />
+                  </button>
                   <ProfileSwitcher />
                   <ThemeToggle />
-                  <div className="control-surface hidden items-center gap-2 rounded-full px-2.5 py-1.5 lg:flex">
-                    <div className="flex size-8 items-center justify-center rounded-full bg-[color:var(--surface-inset-strong)] text-xs font-semibold text-foreground">
+                  <div className="shell-control hidden min-w-[196px] justify-start gap-2 pl-2 pr-3 lg:flex">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-[var(--surface-quiet-strong)] text-xs font-semibold text-foreground shadow-[0_0_18px_var(--surface-glow)]">
                       {account
                         ? getInitials(account.displayName)
                         : currentProfile
@@ -127,7 +133,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {authStatus === "authenticated" ? (
                     <button
                       type="button"
-                      className="control-surface hidden size-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground lg:flex"
+                      className="shell-control shell-control-icon hidden text-muted-foreground hover:text-foreground lg:flex"
                       aria-label="Выйти из аккаунта"
                       onClick={() => void signOut({ callbackUrl: "/" })}
                     >
@@ -136,7 +142,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   ) : (
                     <Link
                       href="/auth"
-                      className="hidden rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-4 py-2 text-[13px] font-medium text-foreground transition hover:bg-[var(--surface-control-hover)] lg:inline-flex"
+                      className="shell-control shell-tab hidden text-foreground lg:inline-flex"
                     >
                       Войти
                     </Link>
@@ -149,12 +155,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Link
                     key={`${item.key}-mobile`}
                     href={item.href}
-                    className={cn(
-                      "shrink-0 rounded-full px-4 py-2 text-[13px] font-medium tracking-wide transition-all duration-300",
-                      item.active
-                        ? "border border-primary/25 bg-primary/12 text-foreground shadow-[0_12px_28px_var(--surface-glow)]"
-                        : "border border-transparent text-muted-foreground hover:bg-muted/70 hover:text-foreground",
-                    )}
+                    className="shell-control shell-tab h-9 shrink-0 px-4"
+                    aria-current={item.active ? "page" : undefined}
+                    data-active={item.active ? "true" : undefined}
                   >
                     {item.label}
                   </Link>
@@ -168,7 +171,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main
         className={cn(
           "relative flex min-h-screen flex-col",
-          !isTestRunner && "mx-auto w-full max-w-7xl px-4 pb-14 pt-28 sm:px-6 lg:px-8",
+          !isTestRunner && "mx-auto w-full max-w-[1380px] px-4 pb-14 pt-[7.75rem] sm:px-6 lg:px-8",
         )}
       >
         {children}

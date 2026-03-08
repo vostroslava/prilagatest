@@ -67,17 +67,17 @@ function ScaleCard({
   rightName: string;
 }) {
   return (
-    <div className="glass-panel rounded-[1.9rem] p-5">
-      <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+    <div className="dashboard-card rounded-[1.9rem] p-5">
+      <p className="section-kicker">
         {title}
       </p>
       <div className="mt-4 space-y-4">
         {rows.map((row) => (
-          <div key={`${row.blockId}-${row.scaleKey}`} className="panel-inset rounded-[1.45rem] p-4">
+          <div key={`${row.blockId}-${row.scaleKey}`} className="quiet-panel rounded-[1.45rem] p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-base font-semibold tracking-tight text-foreground">{row.label}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.22em] text-muted-foreground/70">
+                <p className="section-kicker mt-1 text-muted-foreground/80">
                   {row.direction === "equal"
                     ? "Очень близко"
                     : row.direction === "left-higher"
@@ -87,7 +87,7 @@ function ScaleCard({
                         : "Недостаточно данных"}
                 </p>
               </div>
-              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 shadow-none">
+              <Badge className="metric-chip shadow-none">
                 {row.absoluteDifference ?? "—"}
               </Badge>
             </div>
@@ -112,29 +112,29 @@ function ResponseCard({
   rightName: string;
 }) {
   return (
-    <div className="panel-inset rounded-[1.4rem] p-4">
+    <div className="quiet-panel rounded-[1.4rem] p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.26em] text-muted-foreground/65">
+          <p className="section-kicker text-muted-foreground/76">
             {row.itemId} · {row.scaleKey}
           </p>
           <p className="mt-3 text-sm leading-7 text-foreground/90">{row.question}</p>
         </div>
-        <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 shadow-none">
+        <Badge className="metric-chip shadow-none">
           {row.absoluteDifference ?? "—"}
         </Badge>
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="panel-inset rounded-[1.15rem] px-3 py-3">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground/65">
+        <div className="quiet-panel rounded-[1.15rem] px-3 py-3">
+          <p className="section-kicker text-muted-foreground/76">
             {leftName}
           </p>
           <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
             {row.leftAnswer ?? "—"}
           </p>
         </div>
-        <div className="panel-inset rounded-[1.15rem] px-3 py-3">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground/65">
+        <div className="quiet-panel rounded-[1.15rem] px-3 py-3">
+          <p className="section-kicker text-muted-foreground/76">
             {rightName}
           </p>
           <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
@@ -206,8 +206,8 @@ export function CompareWorkspace() {
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="glass-panel rounded-[2.35rem] p-6 sm:p-7">
-          <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+        <div className="dashboard-card-strong rounded-[2.35rem] p-6 sm:p-7">
+          <Badge className="status-chip shadow-none">
             Comparison
           </Badge>
           <h1 className="mt-5 font-display text-5xl leading-[0.98] tracking-tight text-foreground">
@@ -220,14 +220,14 @@ export function CompareWorkspace() {
           </p>
         </div>
 
-        <div className="glass-panel rounded-[2.35rem] p-6">
+        <div className="dashboard-card rounded-[2.35rem] p-6">
           <div className="grid gap-4 sm:grid-cols-2">
             {([
               ["left", leftProfile, "Левый профиль"],
               ["right", rightProfile, "Правый профиль"],
             ] as const).map(([side, profile, title]) => (
-              <div key={side} className="panel-inset rounded-[1.7rem] p-5">
-                <p className="text-[11px] uppercase tracking-[0.26em] text-muted-foreground/70">
+              <div key={side} className="quiet-panel rounded-[1.7rem] p-5">
+                <p className="section-kicker">
                   {title}
                 </p>
                 <div className="mt-4 space-y-3">
@@ -244,7 +244,7 @@ export function CompareWorkspace() {
                     </SelectContent>
                   </Select>
 
-                  <label className="control-surface flex cursor-pointer items-center justify-center rounded-full border-dashed px-4 py-4 text-sm text-muted-foreground hover:text-foreground">
+                  <label className="shell-control flex h-11 cursor-pointer items-center justify-center rounded-full border-dashed px-4 text-sm text-muted-foreground hover:text-foreground">
                     Загрузить JSON
                     <input
                       type="file"
@@ -256,7 +256,7 @@ export function CompareWorkspace() {
                 </div>
 
                 {profile ? (
-                  <div className="panel-inset rounded-[1.4rem] p-4">
+                  <div className="quiet-panel rounded-[1.4rem] p-4">
                     <p className="text-base font-semibold tracking-tight text-foreground">
                       {profile.profileMeta.displayName}
                     </p>
@@ -279,10 +279,10 @@ export function CompareWorkspace() {
 
       {comparison ? (
         <>
-          <section className="glass-panel rounded-[2.5rem] p-6 sm:p-7">
+          <section className="dashboard-card-strong rounded-[2.5rem] p-6 sm:p-7">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+                <p className="section-kicker">
                   Overlay Analysis
                 </p>
                 <h2 className="mt-3 font-display text-4xl tracking-tight text-foreground">
@@ -307,7 +307,7 @@ export function CompareWorkspace() {
                   comparison-package.json
                 </Button>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   className="rounded-full px-5"
                   onClick={() =>
                     downloadBlob(
@@ -323,7 +323,7 @@ export function CompareWorkspace() {
             </div>
 
             <Tabs defaultValue="big-five" className="mt-8 space-y-6">
-              <TabsList className="w-full flex-wrap rounded-[1.5rem] border border-white/8 bg-white/[0.03] p-2">
+              <TabsList className="dashboard-card w-full flex-wrap rounded-[1.5rem] p-2">
                 {(["big-five", "ipip-ipc", "conflict-profile"] as const).map((blockId) => (
                   <TabsTrigger key={blockId} value={blockId} className="rounded-full px-5">
                     {BLOCK_META[blockId].title}
@@ -354,8 +354,8 @@ export function CompareWorkspace() {
                   <TabsContent key={blockId} value={blockId} className="space-y-6">
                     <div className="grid gap-6 xl:grid-cols-[0.82fr_1.16fr_0.82fr]">
                       {[comparison.leftProfile, comparison.rightProfile].map((profile, index) => (
-                        <div key={profile.profileMeta.id} className="glass-panel rounded-[2rem] p-5">
-                          <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+                        <div key={profile.profileMeta.id} className="dashboard-card rounded-[2rem] p-5">
+                          <p className="section-kicker">
                             {index === 0 ? "Left profile" : "Right profile"}
                           </p>
                           <h3 className="mt-4 text-2xl font-semibold tracking-tight text-foreground">
@@ -365,7 +365,7 @@ export function CompareWorkspace() {
                             {profile.profileMeta.contexts.map((context) => (
                               <Badge
                                 key={`${profile.profileMeta.id}-${context}`}
-                                className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-muted-foreground shadow-none"
+                                className="status-chip shadow-none"
                               >
                                 {contextLabel(context)}
                               </Badge>
@@ -401,13 +401,13 @@ export function CompareWorkspace() {
                         rightName={comparison.rightProfile.profileMeta.displayName}
                       />
 
-                      <div className="glass-panel rounded-[1.9rem] p-5">
-                        <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+                      <div className="dashboard-card rounded-[1.9rem] p-5">
+                        <p className="section-kicker">
                           Potential friction points
                         </p>
                         <div className="mt-4 space-y-4">
                           {responseRows.slice(0, 3).map((row) => (
-                            <div key={row.itemId} className="panel-inset rounded-[1.4rem] p-4">
+                            <div key={row.itemId} className="quiet-panel rounded-[1.4rem] p-4">
                               <p className="text-sm font-medium tracking-tight text-foreground">
                                 {row.scaleKey}
                               </p>
@@ -419,13 +419,13 @@ export function CompareWorkspace() {
                         </div>
                       </div>
 
-                      <div className="glass-panel rounded-[1.9rem] p-5">
-                        <p className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground/70">
+                      <div className="dashboard-card rounded-[1.9rem] p-5">
+                        <p className="section-kicker">
                           Communication prompts
                         </p>
                         <div className="mt-4 space-y-4">
                           {prompts.map((prompt) => (
-                            <div key={prompt.key} className="panel-inset rounded-[1.4rem] p-4 text-sm leading-7 text-muted-foreground">
+                            <div key={prompt.key} className="quiet-panel rounded-[1.4rem] p-4 text-sm leading-7 text-muted-foreground">
                               {prompt.text}
                             </div>
                           ))}
@@ -433,7 +433,7 @@ export function CompareWorkspace() {
                       </div>
                     </div>
 
-                    <details className="glass-panel rounded-[2rem] p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <details className="dashboard-card rounded-[2rem] p-5 [&_summary::-webkit-details-marker]:hidden">
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                         <div>
                           <p className="font-display text-2xl tracking-tight text-foreground">Сырые ответы рядом</p>
@@ -441,7 +441,7 @@ export function CompareWorkspace() {
                             Полный слой ответов для ручного анализа внутри этого блока.
                           </p>
                         </div>
-                        <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 shadow-none">
+                        <Badge className="metric-chip shadow-none">
                           {comparison.responseComparisons[blockId].length}
                         </Badge>
                       </summary>
