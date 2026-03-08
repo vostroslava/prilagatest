@@ -1,5 +1,9 @@
 import { ResultsView } from "@/components/results/results-view";
 
+export function generateStaticParams() {
+  return [{ profileId: "default" }];
+}
+
 export default async function ResultsPage({
   params,
 }: {

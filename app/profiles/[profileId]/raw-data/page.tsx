@@ -1,5 +1,9 @@
 import { RawDataView } from "@/components/profile/raw-data-view";
 
+export function generateStaticParams() {
+  return [{ profileId: "default" }];
+}
+
 export default async function RawDataPage({
   params,
 }: {
