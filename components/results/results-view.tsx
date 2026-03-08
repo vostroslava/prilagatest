@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricBar } from "@/components/visuals/metric-bar";
 import { ProfileRadar } from "@/components/visuals/profile-radar";
-import { contextLabel, formatDate } from "@/lib/presenters";
+import { contextLabel, formatDate, syncStatusLabel } from "@/lib/presenters";
+import { toProfileExport } from "@/lib/storage/profile-document";
 
 interface ResultsViewProps {
   profileId: string;
@@ -34,7 +35,7 @@ export function ResultsView({ profileId }: ResultsViewProps) {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profileData: profile }),
+        body: JSON.stringify({ profileData: toProfileExport(profile) }),
       });
 
       const data = await res.json();
@@ -98,6 +99,9 @@ export function ResultsView({ profileId }: ResultsViewProps) {
               </Badge>
               <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
                 Обновлён {formatDate(profile.profileMeta.updatedAt)}
+              </Badge>
+              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+                {syncStatusLabel(profile.syncMeta?.status)}
               </Badge>
             </div>
 

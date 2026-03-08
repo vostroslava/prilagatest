@@ -20,7 +20,7 @@ interface ProfileFormProps {
 
 export function ProfileForm({ profile }: ProfileFormProps) {
   const router = useRouter();
-  const { createProfile, updateProfileDetails } = useProfiles();
+  const { createProfile, updateProfileDetails, authStatus } = useProfiles();
   const [displayName, setDisplayName] = React.useState(profile?.profileMeta.displayName ?? "");
   const [about, setAbout] = React.useState(profile?.profileMeta.about ?? "");
   const [contexts, setContexts] = React.useState<ProfileContext[]>(
@@ -73,7 +73,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               {profile ? "Edit profile" : "Create profile"}
             </Badge>
             <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
-              local-only
+              {authStatus === "authenticated" ? "sync on create" : "local-only"}
             </Badge>
           </div>
           <div className="space-y-4">
@@ -164,7 +164,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                 {profile ? "Сохранить и продолжить" : "Создать профиль и перейти к тестам"}
               </Button>
               <p className="text-sm text-muted-foreground">
-                Регистрация не обязательна. Удалённая база данных не используется.
+                Регистрация не обязательна. В гостевом режиме профиль останется только локально,
+                а после входа сможет сразу пойти в sync.
               </p>
             </div>
           </form>

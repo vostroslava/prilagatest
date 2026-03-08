@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createComparisonPackage, generateComparisonMarkdown } from "@/lib/export/comparison-package";
 import { downloadBlob, slugify } from "@/lib/export/download";
 import { validateProfileExport } from "@/lib/export/profile-schema";
+import { toProfileExport } from "@/lib/storage/profile-document";
 import { contextLabel } from "@/lib/presenters";
 import type { BlockId } from "@/types/assessment";
 import type { ComparisonResponseDifference, ComparisonScaleDifference } from "@/types/export";
@@ -190,9 +191,9 @@ export function CompareWorkspace() {
     }
 
     if (side === "left") {
-      setLeftProfile(profile);
+      setLeftProfile(toProfileExport(profile));
     } else {
-      setRightProfile(profile);
+      setRightProfile(toProfileExport(profile));
     }
 
     setError("");

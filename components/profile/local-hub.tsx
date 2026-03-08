@@ -2,13 +2,21 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, Download, FileJson, Sparkles, Upload } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCheck,
+  CloudUpload,
+  Download,
+  FileJson,
+  Sparkles,
+  Upload,
+} from "lucide-react";
 
 import { useProfiles } from "@/components/providers/profiles-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TEST_BLOCKS } from "@/content/tests";
-import { contextLabel, formatDate } from "@/lib/presenters";
+import { contextLabel, formatDate, syncStatusLabel } from "@/lib/presenters";
 import { MetricBar } from "@/components/visuals/metric-bar";
 import { MiniRing } from "@/components/visuals/mini-ring";
 import { ProfileRadar } from "@/components/visuals/profile-radar";
@@ -21,10 +29,47 @@ const PLACEHOLDER_RADAR = [
   { label: "Neuro", value: 42 },
 ];
 
+function useSyncSelection(profileIds: string[]) {
+  const [selectedIds, setSelectedIds] = React.useState<string[]>(profileIds);
+
+  React.useEffect(() => {
+    setSelectedIds(profileIds);
+  }, [profileIds]);
+
+  const toggle = React.useCallback((profileId: string) => {
+    setSelectedIds((current) =>
+      current.includes(profileId)
+        ? current.filter((entry) => entry !== profileId)
+        : [...current, profileId],
+    );
+  }, []);
+
+  return {
+    selectedIds,
+    toggle,
+  };
+}
+
 export function LocalHub() {
-  const { profiles, currentProfile, importProfileFromObject, hydrated } = useProfiles();
-  const [message, setMessage] = React.useState<string>("");
-  const [error, setError] = React.useState<string>("");
+  const {
+    profiles,
+    currentProfile,
+    importProfileFromObject,
+    hydrated,
+    authStatus,
+    account,
+    syncBusy,
+    syncError,
+    syncCandidates,
+    syncSelectedProfiles,
+    syncAllProfiles,
+    keepProfilesLocal,
+  } = useProfiles();
+  const [message, setMessage] = React.useState("");
+  const [error, setError] = React.useState("");
+  const { selectedIds, toggle } = useSyncSelection(
+    syncCandidates.map((profile) => profile.profileMeta.id),
+  );
 
   const focusProfile = currentProfile ?? profiles[0] ?? null;
   const heroRadarData = focusProfile
@@ -64,6 +109,88 @@ export function LocalHub() {
 
   return (
     <div className="space-y-8">
+      {authStatus === "authenticated" && syncCandidates.length ? (
+        <section className="glass-panel rounded-[2.2rem] p-5 sm:p-6">
+          <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+            <div className="max-w-3xl">
+              <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
+                Guest → Account Sync
+              </Badge>
+              <h2 className="mt-4 font-display text-3xl tracking-tight text-foreground">
+                После входа найдены локальные профили без серверного backup
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                {account?.displayName}, выберите, какие профили нужно прикрепить к аккаунту.
+                Можно оставить их только на этом устройстве, ничего не ломая в базовом local-first сценарии.
+              </p>
+              {syncError ? (
+                <p className="mt-3 text-sm text-destructive">{syncError}</p>
+              ) : null}
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                className="rounded-full px-5"
+                disabled={syncBusy}
+                onClick={() => void keepProfilesLocal()}
+              >
+                Оставить локально
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-5"
+                disabled={syncBusy || !selectedIds.length}
+                onClick={() => void syncSelectedProfiles(selectedIds)}
+              >
+                Синхронизировать выбранные
+              </Button>
+              <Button
+                className="rounded-full px-5"
+                disabled={syncBusy}
+                onClick={() => void syncAllProfiles()}
+              >
+                Синхронизировать все
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-3">
+            {syncCandidates.map((profile) => {
+              const selected = selectedIds.includes(profile.profileMeta.id);
+
+              return (
+                <button
+                  key={profile.profileMeta.id}
+                  type="button"
+                  onClick={() => toggle(profile.profileMeta.id)}
+                  className={`panel-inset rounded-[1.6rem] p-4 text-left transition ${
+                    selected
+                      ? "border-primary/40 shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_22%,transparent)]"
+                      : ""
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-base font-semibold tracking-tight text-foreground">
+                        {profile.profileMeta.displayName}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        Обновлён {formatDate(profile.profileMeta.updatedAt)}
+                      </p>
+                    </div>
+                    {selected ? <CheckCheck className="mt-1 size-4 text-primary" /> : null}
+                  </div>
+                  <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                    {profile.textualInterpretation.shortProfile}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
       <section className="grid gap-6 xl:grid-cols-[0.9fr_1.15fr_0.85fr]">
         <div className="glass-panel flex flex-col justify-between rounded-[2.25rem] p-6 sm:p-7">
           <div className="space-y-6">
@@ -72,7 +199,7 @@ export function LocalHub() {
                 Local-first
               </Badge>
               <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted-foreground shadow-none">
-                Premium v1
+                {authStatus === "authenticated" ? "Backup enabled" : "Guest mode"}
               </Badge>
             </div>
 
@@ -88,25 +215,28 @@ export function LocalHub() {
                 вопросы, шкалы, контексты, экспорт и сравнение двух людей без
                 автоматического вердикта.
               </p>
+              <p className="max-w-xl text-sm leading-7 text-muted-foreground">
+                {authStatus === "authenticated"
+                  ? "Аккаунт добавляет серверный backup и sync между устройствами, но не заменяет локальное хранение."
+                  : "Можно продолжать как гость и подключить аккаунт позже для sync и доступа с нескольких устройств."}
+              </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button
-                asChild
-                className="rounded-full px-5"
-              >
+              <Button asChild className="rounded-full px-5">
                 <Link href={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/tests` : "/profiles/new"}>
                   {focusProfile ? "Продолжить тест" : "Создать профиль"}
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="rounded-full px-5"
-              >
+              <Button asChild variant="outline" className="rounded-full px-5">
                 <Link href="/compare">Открыть сравнение</Link>
               </Button>
+              {authStatus !== "authenticated" ? (
+                <Button asChild variant="outline" className="rounded-full px-5">
+                  <Link href="/auth">Войти для sync</Link>
+                </Button>
+              ) : null}
             </div>
           </div>
 
@@ -116,7 +246,7 @@ export function LocalHub() {
                 Полный экспорт
               </p>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                JSON, Markdown и короткая сводка доступны из каждого профиля без сервера.
+                JSON, Markdown и короткая сводка доступны из каждого профиля и в гостевом режиме, и после входа.
               </p>
             </div>
             <div className="panel-inset rounded-[1.5rem] p-4">
@@ -145,11 +275,7 @@ export function LocalHub() {
               <div className="space-y-4">
                 {focusTraits.length ? (
                   focusTraits.map((trait) => (
-                    <MetricBar
-                      key={trait.key}
-                      label={trait.label}
-                      value={trait.normalized ?? 0}
-                    />
+                    <MetricBar key={trait.key} label={trait.label} value={trait.normalized ?? 0} />
                   ))
                 ) : (
                   PLACEHOLDER_RADAR.map((trait) => (
@@ -205,11 +331,7 @@ export function LocalHub() {
                           ? "В процессе"
                           : "Готов к старту"}
                     </span>
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="rounded-full px-4"
-                    >
+                    <Button asChild variant="outline" className="rounded-full px-4">
                       <Link href={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/tests` : "/profiles/new"}>
                         {focusProfile ? "Открыть" : "Begin"}
                       </Link>
@@ -230,11 +352,11 @@ export function LocalHub() {
                 Profiles
               </p>
               <h2 className="mt-3 font-display text-3xl tracking-tight text-foreground">
-                Локальные профили на этом устройстве
+                Профили на этом устройстве
               </h2>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">
                 {hydrated
-                  ? "Все профили живут в IndexedDB и могут быть экспортированы полностью."
+                  ? "Профили хранятся локально в IndexedDB. При входе можно включить серверный backup и sync."
                   : "Загружаем локальное хранилище…"}
               </p>
             </div>
@@ -246,10 +368,7 @@ export function LocalHub() {
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             {profiles.length ? (
               profiles.map((profile) => (
-                <div
-                  key={profile.profileMeta.id}
-                  className="panel-inset rounded-[1.8rem] p-5"
-                >
+                <div key={profile.profileMeta.id} className="panel-inset rounded-[1.8rem] p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xl font-semibold tracking-tight text-foreground">
@@ -257,6 +376,9 @@ export function LocalHub() {
                       </p>
                       <p className="mt-2 text-sm text-muted-foreground">
                         Обновлён {formatDate(profile.profileMeta.updatedAt)}
+                      </p>
+                      <p className="mt-1 text-xs uppercase tracking-[0.22em] text-muted-foreground/70">
+                        {syncStatusLabel(profile.syncMeta?.status)}
                       </p>
                     </div>
                     <Badge className="rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-3 py-1 shadow-none">
@@ -357,6 +479,17 @@ export function LocalHub() {
                   <Download className="size-4" />
                 </Link>
               </Button>
+              {authStatus === "authenticated" ? (
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full"
+                  disabled={syncBusy || !profiles.length}
+                  onClick={() => void syncAllProfiles()}
+                >
+                  <CloudUpload className="size-4" />
+                  Синхронизировать профили
+                </Button>
+              ) : null}
             </div>
           </div>
 
@@ -370,7 +503,7 @@ export function LocalHub() {
                   Notes
                 </p>
                 <h3 className="text-xl font-semibold tracking-tight text-foreground">
-                  Система v1
+                  Система v1.5
                 </h3>
               </div>
             </div>
@@ -387,9 +520,9 @@ export function LocalHub() {
             ) : null}
 
             <div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">
-              <p>Никаких автоматических процентов совместимости внутри продукта.</p>
-              <p>Никакого внешнего серверного хранилища профилей в базовом сценарии.</p>
-              <p>Вся аналитика остаётся аккуратной, descriptive и пригодной для ручного разбора.</p>
+              <p>Гость может проходить все тесты без регистрации.</p>
+              <p>Аккаунт добавляет sync, backup и перенос профиля между устройствами.</p>
+              <p>Никаких публичных профилей, matching-механики или forced registration не появляется.</p>
             </div>
           </div>
         </div>

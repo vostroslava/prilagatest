@@ -53,6 +53,18 @@ export interface VersionInfo {
   conflictModuleVersion: string;
 }
 
+export type SyncStatus = "local-only" | "synced" | "pending-sync" | "sync-error";
+export type LocalDecision = "undecided" | "keep-local" | "sync";
+
+export interface ProfileSyncMeta {
+  status: SyncStatus;
+  ownerUserId: string | null;
+  serverUpdatedAt: string | null;
+  lastSyncedAt: string | null;
+  lastSyncError: string | null;
+  localDecision: LocalDecision;
+}
+
 export interface FullProfileExport {
   exportType: "self-understanding-profile-v1";
   profileMeta: ProfileMeta;
@@ -66,4 +78,6 @@ export interface FullProfileExport {
   calculationMeta: CalculationMeta;
 }
 
-export type StoredProfile = FullProfileExport;
+export interface StoredProfile extends FullProfileExport {
+  syncMeta?: ProfileSyncMeta;
+}

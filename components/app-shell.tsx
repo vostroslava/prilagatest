@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Command, Search } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Command, LogOut, Search } from "lucide-react";
 
 import { ProfileSwitcher } from "@/components/profile/profile-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -20,7 +21,7 @@ function getInitials(value: string) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { currentProfileId, currentProfile } = useProfiles();
+  const { currentProfileId, currentProfile, account, authStatus } = useProfiles();
 
   const navItems = [
     {
@@ -108,17 +109,38 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <ThemeToggle />
                   <div className="control-surface hidden items-center gap-2 rounded-full px-2.5 py-1.5 lg:flex">
                     <div className="flex size-8 items-center justify-center rounded-full bg-[color:var(--surface-inset-strong)] text-xs font-semibold text-foreground">
-                      {currentProfile ? getInitials(currentProfile.profileMeta.displayName) : "LP"}
+                      {account
+                        ? getInitials(account.displayName)
+                        : currentProfile
+                          ? getInitials(currentProfile.profileMeta.displayName)
+                          : "LP"}
                     </div>
                     <div className="max-w-[120px]">
                       <p className="truncate text-sm font-medium text-foreground">
-                        {currentProfile?.profileMeta.displayName ?? "Локальный профиль"}
+                        {account?.displayName ?? currentProfile?.profileMeta.displayName ?? "Локальный профиль"}
                       </p>
                       <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                        profile
+                        {account ? `@${account.username}` : "guest mode"}
                       </p>
                     </div>
                   </div>
+                  {authStatus === "authenticated" ? (
+                    <button
+                      type="button"
+                      className="control-surface hidden size-10 items-center justify-center rounded-full text-muted-foreground hover:text-foreground lg:flex"
+                      aria-label="Выйти из аккаунта"
+                      onClick={() => void signOut({ callbackUrl: "/" })}
+                    >
+                      <LogOut className="size-4" />
+                    </button>
+                  ) : (
+                    <Link
+                      href="/auth"
+                      className="hidden rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-control)] px-4 py-2 text-[13px] font-medium text-foreground transition hover:bg-[var(--surface-control-hover)] lg:inline-flex"
+                    >
+                      Войти
+                    </Link>
+                  )}
                 </div>
               </div>
 

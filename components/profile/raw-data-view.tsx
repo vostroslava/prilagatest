@@ -20,6 +20,7 @@ import {
   generateProfileMarkdown,
   generateProfileSummary,
 } from "@/lib/export/profile-export";
+import { toProfileExport } from "@/lib/storage/profile-document";
 
 interface RawDataViewProps {
   profileId: string;
@@ -82,7 +83,7 @@ export function RawDataView({ profileId }: RawDataViewProps) {
               action: () =>
                 downloadBlob(
                   `${filenameBase}.json`,
-                  JSON.stringify(profile, null, 2),
+                  JSON.stringify(toProfileExport(profile), null, 2),
                   "application/json",
                 ),
             },
