@@ -8,6 +8,7 @@ import {
 } from "@/components/dashboard/config";
 import { HeroBanner } from "@/components/dashboard/hero-banner";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { JourneyTimeline } from "@/components/dashboard/journey-timeline";
 import { ProfileRadarWidget } from "@/components/dashboard/profile-radar-widget";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { TestBlocks } from "@/components/dashboard/test-blocks";
@@ -114,6 +115,45 @@ export function HomeDashboard() {
     [focusProfile],
   );
 
+  const { activeJourneyKey, completedJourneyKeys } = React.useMemo(() => {
+    if (!focusProfile) {
+      return {
+        activeJourneyKey: "big-five",
+        completedJourneyKeys: ["intro"],
+      };
+    }
+
+    const bigFive = focusProfile.assessmentProgress["big-five"].status;
+    const ipc = focusProfile.assessmentProgress["ipip-ipc"].status;
+    const conflict = focusProfile.assessmentProgress["conflict-profile"].status;
+
+    if (conflict === "completed" && focusProfile.profileMeta.status === "ready") {
+      return {
+        activeJourneyKey: "profile",
+        completedJourneyKeys: ["intro", "big-five", "ipip-ipc", "conflict"],
+      };
+    }
+
+    if (ipc === "completed" && conflict !== "not-started") {
+      return {
+        activeJourneyKey: "conflict",
+        completedJourneyKeys: ["intro", "big-five", "ipip-ipc"],
+      };
+    }
+
+    if (bigFive === "completed" && ipc !== "not-started") {
+      return {
+        activeJourneyKey: "ipip-ipc",
+        completedJourneyKeys: ["intro", "big-five"],
+      };
+    }
+
+    return {
+      activeJourneyKey: "big-five",
+      completedJourneyKeys: ["intro"],
+    };
+  }, [focusProfile]);
+
   return (
     <DashboardShell
       currentProfileId={focusProfile?.profileMeta.id ?? null}
@@ -132,9 +172,10 @@ export function HomeDashboard() {
             metrics={scaleMetrics}
             profileHref={focusProfile ? `/profiles/${focusProfile.profileMeta.id}/results` : "/profiles/new"}
           />
-          <div className="dashboard-card rounded-[2rem] p-6 text-white/70">
-            Journey timeline slot
-          </div>
+          <JourneyTimeline
+            activeKey={activeJourneyKey}
+            completedKeys={completedJourneyKeys}
+          />
         </div>
 
         <div className="space-y-6">
